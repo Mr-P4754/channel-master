@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CHANNEL MASTER | Global</title>
+    
+    <meta property="og:title" content="CHANNEL MASTER">
+    <meta property="og:description" content="Become the top streamer! Strategy simulation game.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <style>
+        body { 
+            font-family: 'Helvetica Neue', Arial, sans-serif; 
+            text-align: center; background-color: #000; color: #fff; 
+            padding: 0; margin: 0; user-select: none; overflow: hidden; 
+            touch-action: manipulation; display: flex; flex-direction: column; height: 100vh;
+        }
+
+        /* 広告エリア */
+        #ad-container {
+            width: 100%; height: 60px; background-color: #222;
+            flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+            border-bottom: 1px solid #444; z-index: 1000;
+        }
+        .ad-placeholder { color: #666; font-size: 0.7em; }
+
+        .container { 
+            width: 100%; max-width: 420px; margin: 0 auto; padding: 10px; 
+            flex-grow: 1; box-sizing: border-box; display: flex; flex-direction: column; 
+            position: relative; z-index: 10; background-color: #121212; 
+        }
+
+        /* アニメーション類 */
+        .shake-small { animation: shake 0.15s; }
+        .shake-big { animation: shake 0.4s; }
+        @keyframes shake { 0% { transform: translate(2px, 2px); } 25% { transform: translate(-2px, -2px); } 50% { transform: translate(2px, -2px); } 75% { transform: translate(-2px, 2px); } 100% { transform: translate(0, 0); } }
+        .flash-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 80; opacity: 0; }
+        .flash-anim { animation: screenFlash 0.3s ease-out; }
+        @keyframes screenFlash { 0% { background-color: rgba(255, 255, 255, 0.9); opacity: 1; } 100% { background-color: transparent; opacity: 0; } }
+        .particle { position: fixed; width: 8px; height: 8px; border-radius: 50%; pointer-events: none; z-index: 90; animation: particleFade 0.6s ease-out forwards; }
+        @keyframes particleFade { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
+        .cutin-text { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 4em; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.8), 4px 4px 0px #000; z-index: 95; pointer-events: none; white-space: nowrap; animation: cutIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes cutIn { 0% { transform: translate(-50%, -50%) scale(0) rotate(-15deg); opacity: 0; } 50% { transform: translate(-50%, -50%) scale(1.3) rotate(0deg); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; } }
+        .popup-text { position: absolute; font-weight: 900; font-size: 1.8em; pointer-events: none; text-shadow: 3px 3px 0px rgba(0,0,0,1); z-index: 60; animation: popUp 0.6s ease-out forwards; }
+        @keyframes popUp { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 20% { transform: translateY(-30px) scale(1.3); opacity: 1; } 100% { transform: translateY(-80px) scale(1.0); opacity: 0; } }
+
+        /* UI Styles */
+        .top-bar { display: flex; justify-content: space-between; padding: 5px 15px; background: #1e1e1e; border-radius: 8px; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid #ffd700; flex-shrink: 0; }
+        .turn-box { color: #88ccff; font-weight: 800; }
+        .score-board { margin-bottom: 5px; position: relative; flex-shrink: 0; }
+        .score-label { font-size: 0.8em; color: #ffd700; letter-spacing: 1px; font-weight:bold;}
+        .score-val { font-size: 2.5em; font-weight: 800; line-height: 1; letter-spacing: -1px; color: #fff; text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);}
+        .score-unit { font-size: 0.5em; color: #ccc; margin-right: 5px; }
+        .combo-text { color: #f1c40f; font-style: italic; font-size: 1.0em; font-weight: bold; height: 1.2em; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+        .enemy-container { position: relative; width: 100%; margin: 0 auto 5px; background: #252525; border-radius: 12px; padding: 10px 0; border: 2px solid #555; transition: border-color 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100px; flex-shrink: 0; }
+        .viewer-comment { position: absolute; top: -10px; background: #fff; color: #000; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8em; box-shadow: 0 4px 8px rgba(0,0,0,0.4); border: 2px solid #000; white-space: nowrap; max-width: 90%; overflow: hidden; text-overflow: ellipsis; }
+        .enemy-icon { font-size: 3.2em; display: block; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); margin-top: 5px;}
+        .enemy-info { font-size: 1.0em; font-weight: bold; margin-top: 2px; }
+        .enemy-lv { position: absolute; top: 10px; right: 10px; background: #333; padding: 2px 6px; border-radius: 6px; font-size: 0.7em; font-weight: bold; color: #aaa;}
+
+        .resource-area { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; background: #1e1e1e; padding: 6px; border-radius: 8px; margin-bottom: 5px; border: 1px solid #333; flex-shrink: 0; }
+        .res-item { font-size: 0.7em; padding: 4px; border-radius: 6px; font-weight: bold; display: flex; flex-direction: column; justify-content: center; color:#aaa; position: relative; }
+        .res-val { font-size: 1.4em; margin-top: 2px; color: #fff;}
+        .res-rate { font-size: 0.8em; color: #ffd700; margin-top: 2px; font-weight: 800;} 
+        .economy-bonus { grid-column: span 3; color: #ffd700; font-size: 0.9em; margin-top: 4px; border-top: 1px solid #333; paddingTop: 6px; display: flex; justify-content: center; align-items: center; gap: 10px; font-weight: 900;}
+
+        .item-area { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 5px; flex-shrink: 0; }
+        .btn-item { padding: 8px; border: none; border-radius: 8px; font-weight: bold; color: white; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.85em; background: #2f2f35; border-bottom: 3px solid #1a1a1d; transition: all 0.1s; }
+        .btn-item:active { transform: translateY(3px); border-bottom: none; margin-bottom: 3px;}
+        .btn-item:disabled { opacity: 0.3; cursor: not-allowed; }
+        .btn-item.active { background: linear-gradient(135deg, #5e4c00, #332a00); border: 2px solid #f1c40f; transform: translateY(2px); box-shadow: 0 0 10px rgba(241, 196, 15, 0.3); }
+        .item-boost { color: #f1c40f; }
+        .item-heal { color: #88ccff; }
+
+        .control-panel { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; flex-grow: 1; min-height: 80px;}
+        .special-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 0px; height: 90px; flex-shrink: 0;}
+
+        .btn-action { height: 100%; border: none; border-radius: 12px; color: white; cursor: pointer; position: relative; box-shadow: 0 6px 0 rgba(0,0,0,0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: all 0.05s; overflow: hidden; }
+        .btn-action:active { transform: translateY(6px); box-shadow: none; margin-bottom: 6px; }
+        .btn-action::after { content:''; position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent); pointer-events: none;}
+        
+        .normal-btn { font-size: 2.0em; }
+        .normal-btn .btn-label { font-size: 1.0em; margin-bottom: 0px; line-height: 1;}
+        .special-btn { font-size: 1.8em; } 
+        .special-btn .btn-label { font-size: 0.9em; margin-bottom: 2px; font-weight: 900; white-space: nowrap; }
+
+        .btn-main-text { font-size: 12px; font-weight: bold; margin-bottom: 2px; text-shadow: 0 1px 2px rgba(0,0,0,0.8); white-space: nowrap; }
+        .btn-sub-text { font-size: 10px; opacity: 1.0; font-weight: bold; line-height: 1.2; background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 10px; min-width: 80%; white-space: nowrap; }
+
+        .bg-red { background: linear-gradient(135deg, #ef476f, #d6336c); }
+        .bg-blue { background: linear-gradient(135deg, #118ab2, #073b4c); }
+        .bg-green { background: linear-gradient(135deg, #06d6a0, #059669); }
+        .bg-white { background: linear-gradient(135deg, #f8f9fa, #dee2e6); color: #333; grid-column: span 1.5; }
+        .bg-black { background: linear-gradient(135deg, #9b5de5, #5a189a); grid-column: span 1.5; }
+
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .box-style { background: #1f1f23; padding: 30px; border-radius: 16px; border: 2px solid #ffd700; width: 85%; max-width: 380px; text-align: center; box-shadow: 0 0 40px rgba(255,215,0,0.2); }
+        .main-btn { margin-top: 15px; padding: 15px 40px; font-size: 1.2em; font-weight: bold; background: linear-gradient(90deg, #ffd700, #e6ac00); color: #000; border: none; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4); transition: transform 0.1s; width: 100%;}
+        .main-btn:active { transform: scale(0.95); }
+        
+        /* 言語選択ボタン */
+        .lang-select-row { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center;}
+        .lang-btn { flex: 1; padding: 10px; font-weight: bold; border: 2px solid #444; background: #222; color: #888; border-radius: 8px; cursor: pointer; }
+        .lang-btn.active { border-color: #ffd700; background: #333; color: #fff; box-shadow: 0 0 10px rgba(255,215,0,0.2); }
+
+        .share-btn { margin-top: 15px; padding: 15px 40px; font-size: 1.2em; font-weight: bold; background: #000; color: #fff; border: 1px solid #fff; border-radius: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 80%; margin-left: auto; margin-right: auto;}
+        .sub-btn { margin-top: 10px; padding: 10px 30px; font-size: 0.9em; font-weight: bold; background: #444; color: #fff; border: none; border-radius: 20px; cursor: pointer; }
+        .privacy-link { color: #666; font-size: 0.7em; margin-top: 20px; text-decoration: underline; cursor: pointer; }
+
+        #title-screen { z-index: 2000; }
+        #rule-screen { z-index: 3000; }
+        .title-logo { font-size: 2.5em; font-weight: 900; color: #fff; text-shadow: 4px 4px 0 #000; margin-bottom: 10px; line-height: 1.1;}
+        .title-sub { color: #888; font-size: 0.9em; margin-bottom: 30px; }
+        .high-score-area { background: #000; padding: 10px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #333; }
+        .high-score-label { color: #888; font-size: 0.8em; }
+        .high-score-val { color: #ffd700; font-size: 1.5em; font-weight: bold; }
+
+        .res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; text-align: left;}
+        .res-label { font-size: 0.8em; color: #888; }
+        .res-val-s { font-size: 1.2em; font-weight: bold; color: #fff; }
+        .res-final { font-size: 2.8em; font-weight: 900; color: #ffd700; margin-top: 10px; border-top: 2px solid #333; padding-top: 15px; text-shadow: 0 0 10px rgba(255,215,0,0.5);}
+
+        .rule-row { display: flex; align-items: center; margin-bottom: 10px; text-align: left; font-size: 0.85em; }
+        .rule-icon { font-size: 1.5em; width: 40px; text-align: center; margin-right: 10px; flex-shrink: 0;}
+        .rule-desc strong { color: #f1c40f; }
+        
+        .boost-overlay { position: fixed; top:0; left:0; width:100%; height:100%; border: 4px solid #f1c40f; pointer-events: none; display: none; z-index: 50; box-shadow: inset 0 0 50px rgba(241, 196, 15, 0.4); animation: pulseBorder 0.8s infinite; }
+        @keyframes pulseBorder { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+    </style>
+</head>
+<body>
+
+<div id="ad-container"><div class="ad-placeholder">[ AD SPACE (60px) ]</div></div>
+<div id="flash-fx" class="flash-overlay"></div>
+<div id="boost-fx" class="boost-overlay"></div>
+
+<div id="title-screen" class="overlay">
+    <div class="box-style" style="border-color: #4facfe;">
+        <div class="title-logo">CHANNEL<br><span style="color:#ffd700">MASTER</span></div>
+        <div class="title-sub">Global Edition</div>
+        
+        <div class="lang-select-row">
+            <button class="lang-btn active" id="lang-jp" onclick="setLang('ja')">🇯🇵 日本語</button>
+            <button class="lang-btn" id="lang-en" onclick="setLang('en')">🇺🇸 ENGLISH</button>
+        </div>
+
+        <div class="high-score-area">
+            <div class="high-score-label" id="lbl-best">PERSONAL BEST</div>
+            <div class="high-score-val">¥ <span id="title-high-score">0</span></div>
+        </div>
+        <button class="main-btn" onclick="startGame()" id="btn-start">START STREAM</button>
+        <button class="sub-btn" onclick="toggleRule()" id="btn-rule">HOW TO PLAY</button>
+        <a class="privacy-link" href="#" onclick="alert('Set your Policy URL'); return false;">Privacy Policy</a>
+    </div>
+</div>
+
+<div id="rule-screen" class="overlay" style="display:none;">
+    <div class="box-style">
+        <h3 style="color:#ffd700; margin-top:0;" id="rule-title">配信マニュアル</h3>
+        <div class="rule-row"><div class="rule-icon">🤝</div><div class="rule-desc" id="rule-1">...</div></div>
+        <div class="rule-row"><div class="rule-icon">♻️</div><div class="rule-desc" id="rule-2">...</div></div>
+        <div class="rule-row"><div class="rule-icon">📉</div><div class="rule-desc" id="rule-3">...</div></div>
+        <button class="main-btn" onclick="toggleRule()">OK</button>
+    </div>
+</div>
+
+<div class="container" id="main-container">
+    <div class="top-bar"><div>CHANNEL MASTER</div><div class="turn-box"><span id="lbl-turn-pre">残り</span> <span id="turn">30</span> <span id="lbl-turn-suf">枠</span></div></div>
+    <div class="score-board"><div class="score-label" id="lbl-score">ESTIMATED REVENUE</div><div class="score-val"><span class="score-unit">¥</span><span id="score">0</span></div><div class="combo-text"><span id="combo">0</span> Buzz Chain!</div></div>
+    <div class="enemy-container" id="enemy-box"><div class="viewer-comment" id="viewer-comment">---</div><div class="enemy-lv">Lv.<span id="level">1</span></div><div class="enemy-icon" id="enemy-icon">🔴</div><div class="enemy-info" id="enemy-name">---</div></div>
+    <div class="resource-area">
+        <div class="res-item"><span style="font-size:1.2em">🔥</span><span class="res-val" id="res-red-val">0</span><span class="res-rate" id="rate-red">+0.00x</span></div>
+        <div class="res-item"><span style="font-size:1.2em">❄️</span><span class="res-val" id="res-blue-val">0</span><span class="res-rate" id="rate-blue">+0.00x</span></div>
+        <div class="res-item"><span style="font-size:1.2em">🍀</span><span class="res-val" id="res-green-val">0</span><span class="res-rate" id="rate-green">+0.00x</span></div>
+        <div class="economy-bonus"><span id="lbl-total">TOTAL倍率</span>: <span style="font-size:1.4em">x<span id="b-total">1.00</span></span></div>
+    </div>
+    <div class="item-area">
+        <button class="btn-item" id="btn-boost" onclick="useBooster(event)"><span class="item-boost" id="lbl-boost-name">🎬 拡散ブースト</span><span id="lbl-boost-desc">売上2倍 (残:3)</span></button>
+        <button class="btn-item" id="btn-recover" onclick="useRecover(event)"><span class="item-heal" id="lbl-time-name">⏰ 延長枠申請</span><span id="lbl-time-desc">無料 (残:3)</span></button>
+    </div>
+    <div class="control-panel">
+        <button class="btn-action bg-red normal-btn" onclick="battle('red', event)"><div class="btn-label">🔥</div><span class="btn-main-text" id="main-red">---</span><span class="btn-sub-text" id="sub-red">---</span></button>
+        <button class="btn-action bg-blue normal-btn" onclick="battle('blue', event)"><div class="btn-label">❄️</div><span class="btn-main-text" id="main-blue">---</span><span class="btn-sub-text" id="sub-blue">---</span></button>
+        <button class="btn-action bg-green normal-btn" onclick="battle('green', event)"><div class="btn-label">🍀</div><span class="btn-main-text" id="main-green">---</span><span class="btn-sub-text" id="sub-green">---</span></button>
+    </div>
+    <div class="special-row">
+        <button class="btn-action bg-white special-btn" onclick="battle('white', event)"><div class="btn-label" id="lbl-collab">🤝 コラボ</div><span class="btn-main-text" id="main-white">---</span><span class="btn-sub-text" id="sub-white">---</span></button>
+        <button class="btn-action bg-black special-btn" onclick="battle('black', event)"><div class="btn-label" id="lbl-prank">👻 ドッキリ</div><span class="btn-main-text" id="main-black">---</span><span class="btn-sub-text" id="sub-black">---</span></button>
+    </div>
+</div>
+
+<div id="result-overlay" class="overlay" style="display:none;">
+    <div class="result-box">
+        <div class="res-title">STREAM ENDED</div>
+        <div class="res-grid">
+            <div><div class="res-label" id="lbl-res-base">スパチャ総額</div><div class="res-val-s">¥ <span id="res-base">0</span></div></div>
+            <div><div class="res-label" id="lbl-res-multi">案件・広告倍率</div><div class="res-val-s"><span id="res-multiplier">x1.00</span></div></div>
+        </div>
+        <div style="font-size:0.9em; color:#888; margin-bottom:5px;" id="lbl-res-total">TOTAL REVENUE</div>
+        <div class="res-final">¥ <span id="res-final">0</span></div>
+        <div id="new-record-msg" style="color:#f1c40f; font-weight:bold; display:none; margin-top:5px;">★ NEW RECORD! ★</div>
+        <button class="share-btn" onclick="shareOnX()"><span style="font-size:1.2em">𝕏</span> <span id="lbl-share">結果をポスト</span></button>
+        <div><button class="sub-btn" onclick="backToTitle()" style="margin-top:20px;" id="lbl-back">タイトルへ戻る</button></div>
+    </div>
+</div>
+
+<script>
+    // --- 言語データ ---
+    let CUR_LANG = 'ja';
+    const TEXT = {
+        ja: {
+            turnPre: "残り", turnSuf: "枠", score: "推定収益", total: "TOTAL倍率",
+            boostName: "🎬 拡散ブースト", boostDesc: "売上2倍 (残:", timeName: "⏰ 延長枠申請", timeDesc: "無料 (残:",
+            collab: "🤝 コラボ", prank: "👻 ドッキリ",
+            start: "配信準備完了", rule: "マニュアル", best: "自己ベスト",
+            ruleTitle: "配信マニュアル",
+            r1: "<strong>同色合わせ(Buzz):</strong><br>基本！色を合わせてスコアUP。<br><span style='color:#88ccff; font-size:0.8em'>※延長アイテムが出やすい</span>",
+            r2: "<strong>3すくみ勝ち(Keep):</strong><br>赤>青>緑>赤。色外しでコンボ維持。<br><span style='color:#ccc; font-size:0.8em'>※バランス型</span>",
+            r3: "<strong>それ以外(Promo):</strong><br>コンボは切れるが<strong>収益倍率</strong>が大幅UP！<br><span style='color:#f1c40f; font-size:0.8em'>※ブーストアイテムが出やすい</span>",
+            resBase: "スパチャ総額", resMulti: "案件・広告倍率", resTotal: "最終収益",
+            share: "結果をポスト", back: "タイトルへ戻る",
+            shareTxt: "CHANNEL MASTERで ￥{score} の収益を上げました！ 目指せトップ配信者！",
+            promoName: "案件", keepName: "配信"
+        },
+        en: {
+            turnPre: "Turns:", turnSuf: "", score: "EST. REVENUE", total: "Multiplier",
+            boostName: "🎬 Viral Boost", boostDesc: "2x Score (Left:", timeName: "⏰ Extra Time", timeDesc: "Free (Left:",
+            collab: "🤝 Collab", prank: "👻 Prank",
+            start: "START STREAM", rule: "HOW TO PLAY", best: "PERSONAL BEST",
+            ruleTitle: "STREAM GUIDE",
+            r1: "<strong>Match Color (Buzz):</strong><br>High Score! Match the viewer's color.<br><span style='color:#88ccff; font-size:0.8em'>*Chance for Time item</span>",
+            r2: "<strong>Type Win (Keep):</strong><br>Red>Blue>Green>Red. Maintain combo.<br><span style='color:#ccc; font-size:0.8em'>*Balanced play</span>",
+            r3: "<strong>Others (Promo):</strong><br>Combo breaks, but <strong>Multiplier UP!</strong><br><span style='color:#f1c40f; font-size:0.8em'>*Chance for Boost item</span>",
+            resBase: "Base Revenue", resMulti: "Ad Multiplier", resTotal: "TOTAL REVENUE",
+            share: "Share Result", back: "Back to Title",
+            shareTxt: "I earned ¥{score} in CHANNEL MASTER! Can you beat my score?",
+            promoName: "Ad", keepName: "Live"
+        }
+    };
+
+    const TYPES = [
+        { id: 'red',   icon: '🔥', color: '#ff6b6b', 
+          ja: { name: 'パッション勢', comment: '熱い展開頼む！' }, 
+          en: { name: 'Passion Fan', comment: 'Make it HOT!!' } },
+        { id: 'blue',  icon: '❄️', color: '#4facfe', 
+          ja: { name: 'クール勢', comment: '冷静に解説して。' }, 
+          en: { name: 'Cool Viewer', comment: 'Analyze this.' } },
+        { id: 'green', icon: '🍀', color: '#43e97b', 
+          ja: { name: 'チル勢', comment: 'まったり雑談しよ。' }, 
+          en: { name: 'Chill Fan', comment: 'Relaxing vibes.' } },
+        { id: 'white', icon: '🤝', color: '#ffffff', 
+          ja: { name: 'VIPゲスト', comment: 'コラボ待ってます！' }, 
+          en: { name: 'VIP Guest', comment: 'Collab please!' } },
+        { id: 'black', icon: '👾', color: '#a0a0a0', 
+          ja: { name: 'マニア', comment: '普通の配信飽きたわ。' }, 
+          en: { name: 'Maniac', comment: 'Boring stream...' } }
+    ];
+
+    // --- Sound Manager ---
+    const Sound = {
+        ctx: null,
+        init: function() { try { window.AudioContext = window.AudioContext || window.webkitAudioContext; this.ctx = new AudioContext(); } catch(e){} },
+        playTone: function(type, freq, decay, vol=0.1) {
+            if (!this.ctx) return;
+            try {
+                if(this.ctx.state === 'suspended') this.ctx.resume();
+                const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+                osc.type = type; osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                gain.gain.setValueAtTime(vol, this.ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + decay);
+                osc.connect(gain); gain.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + decay);
+            } catch(e) {}
+        },
+        playBuzz: function() { 
+            if (!this.ctx) return;
+            try {
+                const now = this.ctx.currentTime;
+                [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => { 
+                    const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+                    osc.type = 'square'; osc.frequency.setValueAtTime(f, now + i * 0.06);
+                    gain.gain.setValueAtTime(0.03, now + i * 0.06); gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.1);
+                    osc.connect(gain); gain.connect(this.ctx.destination); osc.start(now + i * 0.06); osc.stop(now + i * 0.06 + 0.1);
+                });
+            } catch(e) {}
+        },
+        playKeep: function() { this.playTone(330, 'triangle', 0.2, 0.05); },
+        playPromo: function() { this.playTone('sawtooth', 150, 0.2, 0.05); },
+        playBoost: function() {
+            if(!this.ctx) return; try { const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.type = 'square'; osc.frequency.setValueAtTime(220, this.ctx.currentTime); osc.frequency.linearRampToValueAtTime(1760, this.ctx.currentTime + 0.4); gain.gain.setValueAtTime(0.05, this.ctx.currentTime); gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.4); osc.connect(gain); gain.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + 0.4); } catch(e) {}
+        },
+        playCancel: function() {
+            if(!this.ctx) return; try { const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.type = 'triangle'; osc.frequency.setValueAtTime(300, this.ctx.currentTime); osc.frequency.linearRampToValueAtTime(100, this.ctx.currentTime + 0.2); gain.gain.setValueAtTime(0.1, this.ctx.currentTime); gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.2); osc.connect(gain); gain.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + 0.2); } catch(e) {}
+        },
+        playTime: function() { this.playTone('sine', 1046.50, 0.1, 0.1); setTimeout(()=>this.playTone('sine', 1318.51, 0.3, 0.1), 80); }
+    };
+
+    // --- Config ---
+    const TOTAL_ADVANTAGE = 3; const TOTAL_NORMAL = 6; const TOTAL_EXTRACT = 9; const TOTAL_SPECIAL_EXTRACT = 12;
+    const RESOURCE_DIVISOR = 30; const SCORE_ADVANTAGE_RATE = 1.0; const SCORE_NORMAL_RATE = 0.6; const SCORE_EXTRACT_RATE = 0.2;
+    const COMBO_RATE = 0.2; const MAX_ITEMS = 5;
+
+    let turn, score, combo, level, resources, boostCount, recoverCount, isBoostActive, currentEnemy;
+    let highScore = 0;
+    let finalScoreForShare = 0;
+
+    window.addEventListener('load', function() {
+        const save = localStorage.getItem('cm_highscore_v1');
+        if(save) highScore = parseInt(save, 10);
+        document.getElementById('title-high-score').innerText = highScore.toLocaleString();
+        applyLang();
+    });
+
+    // --- Language System ---
+    function setLang(lang) {
+        CUR_LANG = lang;
+        document.getElementById('lang-jp').classList.remove('active');
+        document.getElementById('lang-en').classList.remove('active');
+        document.getElementById('lang-' + (lang==='ja'?'jp':'en')).classList.add('active');
+        applyLang();
+        try { Sound.init(); Sound.playTone('triangle', 880, 0.05); } catch(e){}
+    }
+
+    function applyLang() {
+        const T = TEXT[CUR_LANG];
+        // Title & UI
+        document.getElementById('lbl-best').innerText = T.best;
+        document.getElementById('btn-start').innerText = T.start;
+        document.getElementById('btn-rule').innerText = T.rule;
+        document.getElementById('lbl-turn-pre').innerText = T.turnPre;
+        document.getElementById('lbl-turn-suf').innerText = T.turnSuf;
+        document.getElementById('lbl-score').innerText = T.score;
+        document.getElementById('lbl-total').innerText = T.total;
+        document.getElementById('lbl-collab').innerText = T.collab;
+        document.getElementById('lbl-prank').innerText = T.prank;
+        // Rules
+        document.getElementById('rule-title').innerText = T.ruleTitle;
+        document.getElementById('rule-1').innerHTML = T.r1;
+        document.getElementById('rule-2').innerHTML = T.r2;
+        document.getElementById('rule-3').innerHTML = T.r3;
+        // Results
+        document.getElementById('lbl-res-base').innerText = T.resBase;
+        document.getElementById('lbl-res-multi').innerText = T.resMulti;
+        document.getElementById('lbl-res-total').innerText = T.resTotal;
+        document.getElementById('lbl-share').innerText = T.share;
+        document.getElementById('lbl-back').innerText = T.back;
+        
+        updateUI();
+    }
+
+    // --- Main Logic ---
+    function toggleRule() {
+        const el = document.getElementById('rule-screen');
+        el.style.display = (el.style.display === 'none') ? 'flex' : 'none';
+        try { Sound.init(); Sound.playTone('triangle', 440, 0.1); } catch(e){}
+    }
+
+    function startGame() {
+        document.getElementById('title-screen').style.display = 'none';
+        resetGameVariables(); spawnEnemy(); updateUI();
+        try { Sound.init(); Sound.playBuzz(); } catch(e) {}
+    }
+
+    function backToTitle() {
+        try { Sound.playTone('triangle', 330, 0.1); } catch(e){}
+        document.getElementById('result-overlay').style.display = 'none';
+        document.getElementById('title-screen').style.display = 'flex';
+        document.getElementById('title-high-score').innerText = highScore.toLocaleString();
+    }
+
+    function resetGameVariables() {
+        turn = 30; score = 0; combo = 0; level = 1; 
+        resources = { red: 0, blue: 0, green: 0 };
+        boostCount = 3; recoverCount = 3; isBoostActive = false;
+        document.getElementById('new-record-msg').style.display = 'none';
+    }
+
+    function spawnEnemy() {
+        currentEnemy = TYPES[Math.floor(Math.random() * TYPES.length)];
+        updateUI(); 
+    }
+
+    function useBooster(e) {
+        if (turn <= 0) return;
+        if (isBoostActive) { isBoostActive = false; boostCount++; Sound.playCancel(); updateUI(); } 
+        else {
+            if (boostCount <= 0) return;
+            Sound.playBoost(); boostCount--; isBoostActive = true;
+            createParticles(e.clientX, e.clientY, '#f1c40f'); flashScreen('#fff'); spawnCutIn("BOOST!!"); shakeScreen('big'); updateUI();
+        }
+    }
+
+    function useRecover(e) {
+        if (turn <= 0 || recoverCount <= 0) return;
+        Sound.playTime(); turn++; recoverCount--;
+        createParticles(e.clientX, e.clientY, '#88ccff'); flashScreen('#88ccff'); spawnCutIn("EXTEND!"); updateUI();
+    }
+
+    function getMatchup(p, e) {
+        if (e === 'white') return (p === 'white') ? 'advantage' : 'extract';
+        if (e === 'black') return (p === 'black') ? 'advantage' : 'extract';
+        if (p === 'white' || p === 'black') return 'extract';
+        if (p === e) return 'advantage'; 
+        if (e === 'red' && p === 'blue') return 'neutral';
+        if (e === 'blue' && p === 'green') return 'neutral';
+        if (e === 'green' && p === 'red') return 'neutral';
+        return 'extract';
+    }
+
+    function calculateOutcome(playerType) {
+        if(!currentEnemy) return { score:0, res:0, label:"", resultType:"" };
+        let result = getMatchup(playerType, currentEnemy.id);
+        let standardScore = 100 * level; 
+        let predictedScore = 0; let gainTotal = 0; let label = "";
+        let isSpecialAction = (playerType === 'white' || playerType === 'black');
+
+        if (result === 'advantage') {
+            let nextCombo = combo + 1;
+            let comboMult = 1 + (nextCombo * COMBO_RATE);
+            predictedScore = Math.floor(standardScore * comboMult * SCORE_ADVANTAGE_RATE);
+            gainTotal = TOTAL_ADVANTAGE;
+            label = "Buzz!";
+        } else if (result === 'neutral') {
+            let currentComboMult = 1 + (combo * COMBO_RATE);
+            predictedScore = Math.floor(standardScore * currentComboMult * SCORE_NORMAL_RATE);
+            gainTotal = TOTAL_NORMAL;
+            label = "Keep";
+        } else {
+            predictedScore = Math.floor(standardScore * SCORE_EXTRACT_RATE);
+            if (isSpecialAction) gainTotal = TOTAL_SPECIAL_EXTRACT; else gainTotal = TOTAL_EXTRACT;
+            label = "Promo";
+        }
+        if (predictedScore > 0 && isBoostActive) predictedScore *= 2;
+        return { score: predictedScore, res: gainTotal, label: label, resultType: result };
+    }
+
+    function checkItemDrop(resultType) {
+        let dropMsg = "";
+        let rateTime = 0; let rateCap = 0;
+        if (resultType === 'advantage') { rateTime = 0.05; rateCap = 0.05; }
+        else if (resultType === 'neutral') { rateTime = 0.02; rateCap = 0.10; }
+        else { rateTime = 0.01; rateCap = 0.20; }
+        if (Math.random() < rateTime) { if(recoverCount < MAX_ITEMS) { recoverCount++; dropMsg = "TIME"; } }
+        else if (Math.random() < rateCap) { if(boostCount < MAX_ITEMS) { boostCount++; dropMsg = "ITEM"; } }
+        return dropMsg;
+    }
+
+    function spawnPopup(x, y, text, color) {
+        const el = document.createElement('div');
+        el.className = 'popup-text'; el.innerText = text; el.style.color = color;
+        if(!x) { x = window.innerWidth / 2; y = window.innerHeight / 2; }
+        el.style.left = (x - 40) + 'px'; el.style.top = (y - 40) + 'px';
+        document.body.appendChild(el); setTimeout(() => el.remove(), 800);
+    }
+    function spawnCutIn(text) {
+        const el = document.createElement('div');
+        el.className = 'cutin-text'; el.innerText = text;
+        document.body.appendChild(el); setTimeout(() => el.remove(), 600);
+    }
+    function shakeScreen(type) {
+        const c = document.getElementById('main-container');
+        c.classList.remove('shake-small', 'shake-big');
+        void c.offsetWidth; c.classList.add(type === 'big' ? 'shake-big' : 'shake-small');
+    }
+    function flashScreen(color) {
+        const f = document.getElementById('flash-fx');
+        f.style.backgroundColor = color;
+        f.classList.remove('flash-anim'); void f.offsetWidth; f.classList.add('flash-anim');
+    }
+    function createParticles(x, y, color) {
+        for(let i=0; i<16; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle'; p.style.backgroundColor = color;
+            p.style.left = x + 'px'; p.style.top = y + 'px';
+            const angle = Math.random() * Math.PI * 2; const dist = 50 + Math.random() * 100;
+            const tx = Math.cos(angle) * dist; const ty = Math.sin(angle) * dist;
+            p.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }], { duration: 600, easing: 'ease-out' });
+            document.body.appendChild(p); setTimeout(() => p.remove(), 600);
+        }
+    }
+
+    function battle(playerType, e) {
+        if (turn <= 0) return;
+        let outcome = calculateOutcome(playerType);
+        let isPlayerSpecial = (playerType === 'white' || playerType === 'black');
+        let dropType = checkItemDrop(outcome.resultType);
+
+        if (outcome.resultType === 'advantage' || outcome.resultType === 'neutral') combo++; else combo = 0;
+        level++;
+
+        if (isPlayerSpecial) {
+            let perRes = Math.floor(outcome.res / 3);
+            resources.red += perRes; resources.blue += perRes; resources.green += perRes;
+        } else {
+            if (playerType === 'red') resources.red += outcome.res;
+            if (playerType === 'blue') resources.blue += outcome.res;
+            if (playerType === 'green') resources.green += outcome.res;
+        }
+
+        score += outcome.score;
+        turn--;
+        if (isBoostActive) isBoostActive = false;
+
+        let color = "#fff";
+        if(outcome.label === "Buzz!") { color = "#f1c40f"; Sound.playBuzz(); shakeScreen('small'); }
+        else if(outcome.label === "Keep") { color = "#ccc"; Sound.playKeep(); }
+        else { color = "#88ccff"; Sound.playPromo(); }
+        
+        spawnPopup(e.clientX, e.clientY, `${outcome.label}\n+¥${outcome.score}`, color);
+        if(dropType === "TIME") { setTimeout(()=>{ spawnPopup(e.clientX, e.clientY - 50, "⏰GET!", "#88ccff"); Sound.playTime(); }, 200); }
+        if(dropType === "ITEM") { setTimeout(()=>{ spawnPopup(e.clientX, e.clientY - 50, "🎬GET!", "#f1c40f"); Sound.playBoost(); }, 200); }
+
+        spawnEnemy(); checkGameEnd(); updateUI();
+    }
+
+    function checkGameEnd() { if (turn <= 0) setTimeout(showResult, 500); }
+
+    function getFinalMultipliers() {
+        let rRatio = resources.red / RESOURCE_DIVISOR;
+        let bRatio = resources.blue / RESOURCE_DIVISOR;
+        let gRatio = resources.green / RESOURCE_DIVISOR;
+        let totalMult = 1.0 + rRatio + bRatio + gRatio;
+        return { r: rRatio, b: bRatio, g: gRatio, total: totalMult };
+    }
+
+    function showResult() {
+        Sound.playBoost();
+        const overlay = document.getElementById('result-overlay');
+        overlay.style.display = 'flex';
+        let m = getFinalMultipliers();
+        let finalScore = Math.floor(score * m.total);
+        finalScoreForShare = finalScore;
+
+        document.getElementById('res-base').innerText = score.toLocaleString();
+        document.getElementById('res-multiplier').innerText = `x${m.total.toFixed(2)}`;
+        document.getElementById('res-final').innerText = finalScore.toLocaleString();
+
+        if(finalScore > highScore) {
+            highScore = finalScore;
+            localStorage.setItem('cm_highscore_v1', highScore);
+            document.getElementById('new-record-msg').style.display = 'block';
+            shakeScreen('big');
+        }
+    }
+
+    function shareOnX() {
+        const T = TEXT[CUR_LANG];
+        const text = T.shareTxt.replace("{score}", finalScoreForShare.toLocaleString());
+        const hashtags = "ChannelMaster,GameDev";
+        const url = window.location.href; 
+        const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&hashtags=${hashtags}&url=${encodeURIComponent(url)}`;
+        window.open(intentUrl, '_blank');
+    }
+
+    function updateUI() {
+        const T = TEXT[CUR_LANG];
+        // 修正点: 削除したIDへの参照を消し、テキスト更新のみを行う
+        document.getElementById('turn').innerText = turn;
+        document.getElementById('score').innerText = score.toLocaleString();
+        document.getElementById('combo').innerText = combo;
+        document.getElementById('level').innerText = level;
+        document.getElementById('res-red-val').innerText = resources.red;
+        document.getElementById('res-blue-val').innerText = resources.blue;
+        document.getElementById('res-green-val').innerText = resources.green;
+        
+        let m = getFinalMultipliers();
+        document.getElementById('rate-red').innerText = `+${m.r.toFixed(2)}x`;
+        document.getElementById('rate-blue').innerText = `+${m.b.toFixed(2)}x`;
+        document.getElementById('rate-green').innerText = `+${m.g.toFixed(2)}x`;
+        document.getElementById('b-total').innerText = m.total.toFixed(2);
+
+        // アイテム残数はテキスト内で更新
+        document.getElementById('lbl-boost-name').innerText = T.boostName;
+        document.getElementById('lbl-boost-desc').innerText = `${T.boostDesc}${boostCount})`;
+        document.getElementById('lbl-time-name').innerText = T.timeName;
+        document.getElementById('lbl-time-desc').innerText = `${T.timeDesc}${recoverCount})`;
+
+        const btnBoost = document.getElementById('btn-boost');
+        if(isBoostActive) { btnBoost.classList.add('active'); btnBoost.disabled = false; }
+        else { btnBoost.classList.remove('active'); btnBoost.disabled = (boostCount <= 0); }
+
+        document.getElementById('btn-recover').disabled = (recoverCount <= 0);
+        document.getElementById('boost-fx').style.display = isBoostActive ? 'block' : 'none';
+
+        if(currentEnemy) {
+            const box = document.getElementById('enemy-box');
+            box.style.borderColor = currentEnemy.color;
+            document.getElementById('enemy-icon').innerText = currentEnemy.icon;
+            document.getElementById('enemy-name').innerText = currentEnemy[CUR_LANG].name;
+            document.getElementById('enemy-name').style.color = currentEnemy.color;
+            document.getElementById('viewer-comment').innerText = currentEnemy[CUR_LANG].comment;
+            document.getElementById('viewer-comment').style.color = '#000';
+        }
+        updateButtonLabels();
+    }
+
+    function updateButtonLabels() {
+        if(!currentEnemy) return;
+        const T = TEXT[CUR_LANG];
+        const targets = ['red', 'blue', 'green', 'white', 'black'];
+        targets.forEach(type => {
+            const outcome = calculateOutcome(type);
+            const mainLbl = document.getElementById(`main-${type}`);
+            const subLbl = document.getElementById(`sub-${type}`);
+            
+            mainLbl.innerText = `+¥${outcome.score}`;
+            let resText = (type === 'white' || type === 'black') ? `ALL+${outcome.res/3}` : `+${outcome.res}`;
+            
+            if (outcome.resultType === 'advantage') {
+                subLbl.innerText = `Buzz! | ${resText}`;
+                subLbl.style.color = "#f1c40f"; mainLbl.style.color = "#f1c40f";
+            } else if (outcome.resultType === 'neutral') {
+                subLbl.innerText = `${T.keepName} | ${resText}`;
+                subLbl.style.color = "#ccc"; mainLbl.style.color = "#ccc";
+            } else {
+                subLbl.innerText = `${T.promoName} | ${resText}`;
+                subLbl.style.color = "#88ccff"; mainLbl.style.color = "#88ccff";
+            }
+        });
+    }
+</script>
+</body>
+</html>
