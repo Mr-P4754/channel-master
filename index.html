@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CHANNEL MASTER | Global</title>
     
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1661799910335681" crossorigin="anonymous"></script>
+
     <meta property="og:title" content="CHANNEL MASTER">
     <meta property="og:description" content="Become the top streamer! Strategy simulation game.">
     <meta property="og:type" content="website">
@@ -17,11 +19,10 @@
             text-align: center; background-color: #000; color: #fff; 
             padding: 0; margin: 0; user-select: none; overflow: hidden; 
             touch-action: manipulation; display: flex; flex-direction: column; 
-            /* スマホのアドレスバー対策済み */
             height: 100dvh;
         }
 
-        /* 広告エリア */
+        /* 広告エリア用余白 */
         #ad-container {
             width: 100%; height: 50px; background-color: #222;
             flex-shrink: 0; display: flex; align-items: center; justify-content: center;
@@ -537,7 +538,6 @@
     function updateUI() {
         const T = TEXT[CUR_LANG];
         
-        // ★修正ポイント: 古いID参照を削除し、動的な値はここで一括更新
         document.getElementById('turn').innerText = turn;
         document.getElementById('score').innerText = score.toLocaleString();
         document.getElementById('combo').innerText = combo;
@@ -552,7 +552,6 @@
         document.getElementById('rate-green').innerText = `+${m.g.toFixed(2)}x`;
         document.getElementById('b-total').innerText = m.total.toFixed(2);
 
-        // アイテム残数表示を言語設定に合わせて更新
         document.getElementById('lbl-boost-name').innerText = T.boostName;
         document.getElementById('lbl-boost-desc').innerText = `${T.boostDesc}${boostCount})`;
         document.getElementById('lbl-time-name').innerText = T.timeName;
