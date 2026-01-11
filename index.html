@@ -16,7 +16,9 @@
             font-family: 'Helvetica Neue', Arial, sans-serif; 
             text-align: center; background-color: #000; color: #fff; 
             padding: 0; margin: 0; user-select: none; overflow: hidden; 
-            touch-action: manipulation; display: flex; flex-direction: column; height: 100dvh;
+            touch-action: manipulation; display: flex; flex-direction: column; 
+            /* スマホのアドレスバー対策済み */
+            height: 100dvh;
         }
 
         /* 広告エリア */
@@ -151,7 +153,7 @@
         </div>
         <button class="main-btn" onclick="startGame()" id="btn-start">START STREAM</button>
         <button class="sub-btn" onclick="toggleRule()" id="btn-rule">HOW TO PLAY</button>
-        <a class="privacy-link" href="#" onclick="alert('Set your Policy URL'); return false;">Privacy Policy</a>
+        <a class="privacy-link" href="privacy.html">Privacy Policy</a>
     </div>
 </div>
 
