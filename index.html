@@ -31,12 +31,13 @@
         .ad-placeholder { color: #666; font-size: 0.7em; }
 
         .container { 
-            width: 100%; max-width: 420px; margin: 0 auto; padding: 5px; 
+            width: 100%; max-width: 420px; margin: 0 auto; padding: 10px 15px; 
             flex-grow: 1; box-sizing: border-box; display: flex; flex-direction: column; 
+            justify-content: center; /* 中央寄せ */
             position: relative; z-index: 10; background-color: #121212; 
         }
 
-        /* アニメーション類 */
+        /* アニメーション */
         .shake-small { animation: shake 0.15s; }
         .shake-big { animation: shake 0.4s; }
         @keyframes shake { 0% { transform: translate(2px, 2px); } 25% { transform: translate(-2px, -2px); } 50% { transform: translate(2px, -2px); } 75% { transform: translate(-2px, 2px); } 100% { transform: translate(0, 0); } }
@@ -71,7 +72,7 @@
         .res-rate { font-size: 0.8em; color: #ffd700; margin-top: 2px; font-weight: 800;} 
         .economy-bonus { grid-column: span 3; color: #ffd700; font-size: 0.9em; margin-top: 4px; border-top: 1px solid #333; paddingTop: 6px; display: flex; justify-content: center; align-items: center; gap: 10px; font-weight: 900;}
 
-        .item-area { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 5px; flex-shrink: 0; }
+        .item-area { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; flex-shrink: 0; }
         .btn-item { padding: 8px; border: none; border-radius: 8px; font-weight: bold; color: white; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 0.85em; background: #2f2f35; border-bottom: 3px solid #1a1a1d; transition: all 0.1s; }
         .btn-item:active { transform: translateY(3px); border-bottom: none; margin-bottom: 3px;}
         .btn-item:disabled { opacity: 0.3; cursor: not-allowed; }
@@ -79,57 +80,33 @@
         .item-boost { color: #f1c40f; }
         .item-heal { color: #88ccff; }
 
-        .control-panel { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; flex-grow: 1; min-height: 80px;}
-        .special-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 0px; height: 75px; flex-shrink: 0;}
+        /* ボタン配置の調整：高さを固定してバランスを整える */
+        .control-panel { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; height: 85px; flex-shrink: 0;}
+        .special-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; height: 85px; flex-shrink: 0;}
 
         .btn-action { height: 100%; border: none; border-radius: 12px; color: white; cursor: pointer; position: relative; box-shadow: 0 6px 0 rgba(0,0,0,0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: all 0.05s; overflow: hidden; }
         .btn-action:active { transform: translateY(6px); box-shadow: none; margin-bottom: 6px; }
-        .btn-action::after { content:''; position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent); pointer-events: none;}
         
-        .normal-btn { font-size: 2.0em; }
-        .normal-btn .btn-label { font-size: 1.0em; margin-bottom: 0px; line-height: 1;}
-        .special-btn { font-size: 1.8em; } 
-        .special-btn .btn-label { font-size: 0.9em; margin-bottom: 2px; font-weight: 900; white-space: nowrap; }
+        .normal-btn { font-size: 1.8em; }
+        .special-btn { font-size: 1.6em; } 
 
-        .btn-main-text { font-size: 12px; font-weight: bold; margin-bottom: 2px; text-shadow: 0 1px 2px rgba(0,0,0,0.8); white-space: nowrap; }
-        .btn-sub-text { font-size: 10px; opacity: 1.0; font-weight: bold; line-height: 1.2; background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 10px; min-width: 80%; white-space: nowrap; }
+        .btn-main-text { font-size: 11px; font-weight: bold; margin-bottom: 2px; text-shadow: 0 1px 2px rgba(0,0,0,0.8); white-space: nowrap; }
+        .btn-sub-text { font-size: 9px; font-weight: bold; background: rgba(0,0,0,0.6); padding: 2px 4px; border-radius: 10px; min-width: 90%; white-space: nowrap; }
 
         .bg-red { background: linear-gradient(135deg, #ef476f, #d6336c); }
         .bg-blue { background: linear-gradient(135deg, #118ab2, #073b4c); }
         .bg-green { background: linear-gradient(135deg, #06d6a0, #059669); }
-        .bg-white { background: linear-gradient(135deg, #f8f9fa, #dee2e6); color: #333; grid-column: span 1.5; }
-        .bg-black { background: linear-gradient(135deg, #9b5de5, #5a189a); grid-column: span 1.5; }
+        .bg-white { background: linear-gradient(135deg, #f8f9fa, #dee2e6); color: #333; }
+        .bg-black { background: linear-gradient(135deg, #9b5de5, #5a189a); }
 
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .box-style { background: #1f1f23; padding: 30px; border-radius: 16px; border: 2px solid #ffd700; width: 85%; max-width: 380px; text-align: center; box-shadow: 0 0 40px rgba(255,215,0,0.2); }
-        .main-btn { margin-top: 15px; padding: 15px 40px; font-size: 1.2em; font-weight: bold; background: linear-gradient(90deg, #ffd700, #e6ac00); color: #000; border: none; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4); transition: transform 0.1s; width: 100%;}
-        .main-btn:active { transform: scale(0.95); }
+        .main-btn { margin-top: 15px; padding: 15px 40px; font-size: 1.2em; font-weight: bold; background: linear-gradient(90deg, #ffd700, #e6ac00); color: #000; border: none; border-radius: 30px; cursor: pointer; width: 100%;}
         
-        .lang-select-row { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center;}
-        .lang-btn { flex: 1; padding: 10px; font-weight: bold; border: 2px solid #444; background: #222; color: #888; border-radius: 8px; cursor: pointer; }
-        .lang-btn.active { border-color: #ffd700; background: #333; color: #fff; box-shadow: 0 0 10px rgba(255,215,0,0.2); }
-
         .share-btn { margin-top: 15px; padding: 15px 40px; font-size: 1.2em; font-weight: bold; background: #000; color: #fff; border: 1px solid #fff; border-radius: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; width: 80%; margin-left: auto; margin-right: auto;}
         .sub-btn { margin-top: 10px; padding: 10px 30px; font-size: 0.9em; font-weight: bold; background: #444; color: #fff; border: none; border-radius: 20px; cursor: pointer; }
         .privacy-link { color: #666; font-size: 0.7em; margin-top: 20px; text-decoration: underline; cursor: pointer; }
 
-        #title-screen { z-index: 2000; }
-        #rule-screen { z-index: 3000; }
-        .title-logo { font-size: 2.5em; font-weight: 900; color: #fff; text-shadow: 4px 4px 0 #000; margin-bottom: 10px; line-height: 1.1;}
-        .title-sub { color: #888; font-size: 0.9em; margin-bottom: 30px; }
-        .high-score-area { background: #000; padding: 10px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #333; }
-        .high-score-label { color: #888; font-size: 0.8em; }
-        .high-score-val { color: #ffd700; font-size: 1.5em; font-weight: bold; }
-
-        .res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; text-align: left;}
-        .res-label { font-size: 0.8em; color: #888; }
-        .res-val-s { font-size: 1.2em; font-weight: bold; color: #fff; }
-        .res-final { font-size: 2.8em; font-weight: 900; color: #ffd700; margin-top: 10px; border-top: 2px solid #333; padding-top: 15px; text-shadow: 0 0 10px rgba(255,215,0,0.5);}
-
-        .rule-row { display: flex; align-items: center; margin-bottom: 10px; text-align: left; font-size: 0.85em; }
-        .rule-icon { font-size: 1.5em; width: 40px; text-align: center; margin-right: 10px; flex-shrink: 0;}
-        .rule-desc strong { color: #f1c40f; }
-        
         .boost-overlay { position: fixed; top:0; left:0; width:100%; height:100%; border: 4px solid #f1c40f; pointer-events: none; display: none; z-index: 50; box-shadow: inset 0 0 50px rgba(241, 196, 15, 0.4); animation: pulseBorder 0.8s infinite; }
         @keyframes pulseBorder { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
     </style>
@@ -142,15 +119,15 @@
 
 <div id="title-screen" class="overlay">
     <div class="box-style" style="border-color: #4facfe;">
-        <div class="title-logo">CHANNEL<br><span style="color:#ffd700">MASTER</span></div>
-        <div class="title-sub">Global Edition</div>
-        <div class="lang-select-row">
-            <button class="lang-btn active" id="lang-jp" onclick="setLang('ja')">🇯🇵 日本語</button>
-            <button class="lang-btn" id="lang-en" onclick="setLang('en')">🇺🇸 ENGLISH</button>
+        <div class="title-logo" style="font-size:2.5em; font-weight:900; line-height:1.1;">CHANNEL<br><span style="color:#ffd700">MASTER</span></div>
+        <div class="title-sub" style="color:#888; margin-bottom:30px;">Global Edition</div>
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+            <button class="lang-btn active" id="lang-jp" onclick="setLang('ja')" style="flex:1; padding:10px; border-radius:8px; background:#222; color:#fff; border:2px solid #ffd700;">🇯🇵 日本語</button>
+            <button class="lang-btn" id="lang-en" onclick="setLang('en')" style="flex:1; padding:10px; border-radius:8px; background:#222; color:#888; border:2px solid #444;">🇺🇸 ENGLISH</button>
         </div>
-        <div class="high-score-area">
-            <div class="high-score-label" id="lbl-best">PERSONAL BEST</div>
-            <div class="high-score-val">¥ <span id="title-high-score">0</span></div>
+        <div style="background:#000; padding:10px; border-radius:8px; margin-bottom:20px; border:1px solid #333;">
+            <div id="lbl-best" style="font-size:0.8em; color:#888;">PERSONAL BEST</div>
+            <div style="font-size:1.5em; font-weight:bold; color:#ffd700;">¥ <span id="title-high-score">0</span></div>
         </div>
         <button class="main-btn" onclick="startGame()" id="btn-start">START STREAM</button>
         <button class="sub-btn" onclick="toggleRule()" id="btn-rule">HOW TO PLAY</button>
@@ -161,26 +138,26 @@
 <div id="rule-screen" class="overlay" style="display:none;">
     <div class="box-style">
         <h3 style="color:#ffd700; margin-top:0;" id="rule-title">配信マニュアル</h3>
-        <div class="rule-row"><div class="rule-icon">🤝</div><div class="rule-desc" id="rule-1">...</div></div>
-        <div class="rule-row"><div class="rule-icon">♻️</div><div class="rule-desc" id="rule-2">...</div></div>
-        <div class="rule-row"><div class="rule-icon">📉</div><div class="rule-desc" id="rule-3">...</div></div>
+        <div id="rule-1" style="text-align:left; margin-bottom:10px;"></div>
+        <div id="rule-2" style="text-align:left; margin-bottom:10px;"></div>
+        <div id="rule-3" style="text-align:left; margin-bottom:10px;"></div>
         <button class="main-btn" onclick="toggleRule()">OK</button>
     </div>
 </div>
 
 <div class="container" id="main-container">
-    <div class="top-bar"><div>CHANNEL MASTER</div><div class="turn-box"><span id="lbl-turn-pre">残り</span> <span id="turn">30</span> <span id="lbl-turn-suf">枠</span></div></div>
+    <div class="top-bar"><div>CHANNEL MASTER</div><div class="turn-box"><span id="lbl-turn-pre"></span> <span id="turn">30</span> <span id="lbl-turn-suf"></span></div></div>
     <div class="score-board"><div class="score-label" id="lbl-score">ESTIMATED REVENUE</div><div class="score-val"><span class="score-unit">¥</span><span id="score">0</span></div><div class="combo-text"><span id="combo">0</span> Buzz Chain!</div></div>
     <div class="enemy-container" id="enemy-box"><div class="viewer-comment" id="viewer-comment">---</div><div class="enemy-lv">Lv.<span id="level">1</span></div><div class="enemy-icon" id="enemy-icon">🔴</div><div class="enemy-info" id="enemy-name">---</div></div>
     <div class="resource-area">
-        <div class="res-item"><span style="font-size:1.2em">🔥</span><span class="res-val" id="res-red-val">0</span><span class="res-rate" id="rate-red">+0.00x</span></div>
-        <div class="res-item"><span style="font-size:1.2em">❄️</span><span class="res-val" id="res-blue-val">0</span><span class="res-rate" id="rate-blue">+0.00x</span></div>
-        <div class="res-item"><span style="font-size:1.2em">🍀</span><span class="res-val" id="res-green-val">0</span><span class="res-rate" id="rate-green">+0.00x</span></div>
+        <div class="res-item"><span>🔥</span><span class="res-val" id="res-red-val">0</span><span class="res-rate" id="rate-red">+0.00x</span></div>
+        <div class="res-item"><span>❄️</span><span class="res-val" id="res-blue-val">0</span><span class="res-rate" id="rate-blue">+0.00x</span></div>
+        <div class="res-item"><span>🍀</span><span class="res-val" id="res-green-val">0</span><span class="res-rate" id="rate-green">+0.00x</span></div>
         <div class="economy-bonus"><span id="lbl-total">TOTAL倍率</span>: <span style="font-size:1.4em">x<span id="b-total">1.00</span></span></div>
     </div>
     <div class="item-area">
-        <button class="btn-item" id="btn-boost" onclick="useBooster(event)"><span class="item-boost" id="lbl-boost-name">🎬 拡散ブースト</span><span id="lbl-boost-desc">売上2倍 (残:3)</span></button>
-        <button class="btn-item" id="btn-recover" onclick="useRecover(event)"><span class="item-heal" id="lbl-time-name">⏰ 延長枠申請</span><span id="lbl-time-desc">無料 (残:3)</span></button>
+        <button class="btn-item" id="btn-boost" onclick="useBooster(event)"><span class="item-boost" id="lbl-boost-name">🎬 拡散ブースト</span><span id="lbl-boost-desc"></span></button>
+        <button class="btn-item" id="btn-recover" onclick="useRecover(event)"><span class="item-heal" id="lbl-time-name">⏰ 延長枠申請</span><span id="lbl-time-desc"></span></button>
     </div>
     <div class="control-panel">
         <button class="btn-action bg-red normal-btn" onclick="battle('red', event)"><div class="btn-label">🔥</div><span class="btn-main-text" id="main-red">---</span><span class="btn-sub-text" id="sub-red">---</span></button>
@@ -188,27 +165,34 @@
         <button class="btn-action bg-green normal-btn" onclick="battle('green', event)"><div class="btn-label">🍀</div><span class="btn-main-text" id="main-green">---</span><span class="btn-sub-text" id="sub-green">---</span></button>
     </div>
     <div class="special-row">
-        <button class="btn-action bg-white special-btn" onclick="battle('white', event)"><div class="btn-label" id="lbl-collab">🤝 コラボ</div><span class="btn-main-text" id="main-white">---</span><span class="btn-sub-text" id="sub-white">---</span></button>
-        <button class="btn-action bg-black special-btn" onclick="battle('black', event)"><div class="btn-label" id="lbl-prank">👻 ドッキリ</div><span class="btn-main-text" id="main-black">---</span><span class="btn-sub-text" id="sub-black">---</span></button>
+        <button class="btn-action bg-white special-btn" onclick="battle('white', event)"><div class="btn-label" id="lbl-collab" style="font-weight:900; font-size:0.6em;">🤝 コラボ</div><span class="btn-main-text" id="main-white">---</span><span class="btn-sub-text" id="sub-white">---</span></button>
+        <button class="btn-action bg-black special-btn" onclick="battle('black', event)"><div class="btn-label" id="lbl-prank" style="font-weight:900; font-size:0.6em;">👻 ドッキリ</div><span class="btn-main-text" id="main-black">---</span><span class="btn-sub-text" id="sub-black">---</span></button>
     </div>
 </div>
 
 <div id="result-overlay" class="overlay" style="display:none;">
-    <div class="result-box">
-        <div class="res-title">STREAM ENDED</div>
-        <div class="res-grid">
-            <div><div class="res-label" id="lbl-res-base">スパチャ総額</div><div class="res-val-s">¥ <span id="res-base">0</span></div></div>
-            <div><div class="res-label" id="lbl-res-multi">案件・広告倍率</div><div class="res-val-s"><span id="res-multiplier">x1.00</span></div></div>
+    <div class="box-style">
+        <div style="font-weight:bold; color:#888; margin-bottom:10px;">STREAM ENDED</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px; text-align:left;">
+            <div><div id="lbl-res-base" style="font-size:0.7em; color:#888;"></div><div style="font-weight:bold;">¥ <span id="res-base">0</span></div></div>
+            <div><div id="lbl-res-multi" style="font-size:0.7em; color:#888;"></div><div style="font-weight:bold;"><span id="res-multiplier">x1.00</span></div></div>
         </div>
-        <div style="font-size:0.9em; color:#888; margin-bottom:5px;" id="lbl-res-total">TOTAL REVENUE</div>
-        <div class="res-final">¥ <span id="res-final">0</span></div>
-        <div id="new-record-msg" style="color:#f1c40f; font-weight:bold; display:none; margin-top:5px;">★ NEW RECORD! ★</div>
-        <button class="share-btn" onclick="shareOnX()"><span style="font-size:1.2em">𝕏</span> <span id="lbl-share">結果をポスト</span></button>
-        <div><button class="sub-btn" onclick="backToTitle()" style="margin-top:20px;" id="lbl-back">タイトルへ戻る</button></div>
+        <div id="lbl-res-total" style="font-size:0.8em; color:#888; margin-bottom:5px;"></div>
+        <div style="font-size:2.5em; font-weight:900; color:#ffd700; text-shadow:0 0 10px rgba(255,215,0,0.5);">¥ <span id="res-final">0</span></div>
+        <div id="new-record-msg" style="color:#f1c40f; font-weight:bold; display:none; margin-top:10px;">★ NEW RECORD! ★</div>
+        <button class="share-btn" onclick="shareOnX()">𝕏 <span id="lbl-share">結果をポスト</span></button>
+        <button class="sub-btn" onclick="backToTitle()" id="lbl-back">タイトルへ戻る</button>
     </div>
 </div>
 
 <script>
+    // --- 振動機能の定義 ---
+    const Vibrate = {
+        short: function() { if (navigator.vibrate) navigator.vibrate(15); }, 
+        medium: function() { if (navigator.vibrate) navigator.vibrate(40); }, 
+        long: function() { if (navigator.vibrate) navigator.vibrate([60, 50, 60]); }
+    };
+
     const TOTAL_ADVANTAGE = 3; const TOTAL_NORMAL = 6; const TOTAL_EXTRACT = 9; const TOTAL_SPECIAL_EXTRACT = 12;
     const RESOURCE_DIVISOR = 30; const SCORE_ADVANTAGE_RATE = 1.0; const SCORE_NORMAL_RATE = 0.6; const SCORE_EXTRACT_RATE = 0.2;
     const COMBO_RATE = 0.2; const MAX_ITEMS = 5;
@@ -226,30 +210,18 @@
         ja: {
             turnPre: "残り", turnSuf: "枠", score: "推定収益", total: "TOTAL倍率",
             boostName: "🎬 拡散ブースト", boostDesc: "売上2倍 (残:", timeName: "⏰ 延長枠申請", timeDesc: "無料 (残:",
-            collab: "🤝 コラボ", prank: "👻 ドッキリ",
-            start: "配信準備完了", rule: "マニュアル", best: "自己ベスト",
-            ruleTitle: "配信マニュアル",
-            r1: "<strong>同色合わせ(Buzz):</strong><br>基本！色を合わせてスコアUP。<br><span style='color:#88ccff; font-size:0.8em'>※延長アイテムが出やすい</span>",
-            r2: "<strong>3すくみ勝ち(Keep):</strong><br>赤>青>緑>赤。色外しでコンボ維持。<br><span style='color:#ccc; font-size:0.8em'>※バランス型</span>",
-            r3: "<strong>それ以外(Promo):</strong><br>コンボは切れるが<strong>収益倍率</strong>が大幅UP！<br><span style='color:#f1c40f; font-size:0.8em'>※ブーストアイテムが出やすい</span>",
-            resBase: "スパチャ総額", resMulti: "案件・広告倍率", resTotal: "最終収益",
-            share: "結果をポスト", back: "タイトルへ戻る",
-            shareTxt: "CHANNEL MASTERで ￥{score} の収益を上げました！ 目指せトップ配信者！",
-            promoName: "案件", keepName: "配信"
+            collab: "🤝 コラボ", prank: "👻 ドッキリ", start: "配信準備完了", rule: "マニュアル", best: "自己ベスト",
+            ruleTitle: "配信マニュアル", r1: "🤝 <strong>同色合わせ:</strong> 収益UP + 延長枠GETのチャンス", r2: "♻️ <strong>3すくみ勝ち:</strong> コンボ維持で安定配信", r3: "📉 <strong>その他:</strong> コンボは切れるが収益倍率が激増",
+            resBase: "スパチャ総額", resMulti: "案件・広告倍率", resTotal: "最終収益", share: "結果をポスト", back: "タイトルへ戻る",
+            shareTxt: "CHANNEL MASTERで ￥{score} の収益を上げました！", promoName: "案件", keepName: "配信"
         },
         en: {
             turnPre: "Turns:", turnSuf: "", score: "EST. REVENUE", total: "Multiplier",
             boostName: "🎬 Viral Boost", boostDesc: "2x Score (Left:", timeName: "⏰ Extra Time", timeDesc: "Free (Left:",
-            collab: "🤝 Collab", prank: "👻 Prank",
-            start: "START STREAM", rule: "HOW TO PLAY", best: "PERSONAL BEST",
-            ruleTitle: "STREAM GUIDE",
-            r1: "<strong>Match Color (Buzz):</strong><br>High Score! Match the viewer's color.<br><span style='color:#88ccff; font-size:0.8em'>*Chance for Time item</span>",
-            r2: "<strong>Type Win (Keep):</strong><br>Red>Blue>Green>Red. Maintain combo.<br><span style='color:#ccc; font-size:0.8em'>*Balanced play</span>",
-            r3: "<strong>Others (Promo):</strong><br>Combo breaks, but <strong>Multiplier UP!</strong><br><span style='color:#f1c40f; font-size:0.8em'>*Chance for Boost item</span>",
-            resBase: "Base Revenue", resMulti: "Ad Multiplier", resTotal: "TOTAL REVENUE",
-            share: "Share Result", back: "Back to Title",
-            shareTxt: "I earned ¥{score} in CHANNEL MASTER! Can you beat my score?",
-            promoName: "Ad", keepName: "Live"
+            collab: "🤝 Collab", prank: "👻 Prank", start: "START STREAM", rule: "HOW TO PLAY", best: "PERSONAL BEST",
+            ruleTitle: "STREAM GUIDE", r1: "🤝 <strong>Match:</strong> High Score + Time Chance", r2: "♻️ <strong>Win:</strong> Keep combo for stability", r3: "📉 <strong>Other:</strong> Multiplier UP but breaks combo",
+            resBase: "Base Revenue", resMulti: "Ad Multiplier", resTotal: "TOTAL REVENUE", share: "Share Result", back: "Back to Title",
+            shareTxt: "I earned ¥{score} in CHANNEL MASTER!", promoName: "Ad", keepName: "Live"
         }
     };
 
@@ -278,20 +250,14 @@
                 });
             } catch(e) {}
         },
-        playKeep: function() { this.playTone(330, 'triangle', 0.2, 0.05); },
+        playKeep: function() { this.playTone('triangle', 330, 0.2, 0.05); },
         playPromo: function() { this.playTone('sawtooth', 150, 0.2, 0.05); },
-        playBoost: function() {
-            if(!this.ctx) return; try { const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.type = 'square'; osc.frequency.setValueAtTime(220, this.ctx.currentTime); osc.frequency.linearRampToValueAtTime(1760, this.ctx.currentTime + 0.4); gain.gain.setValueAtTime(0.05, this.ctx.currentTime); gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.4); osc.connect(gain); gain.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + 0.4); } catch(e) {}
-        },
-        playCancel: function() {
-            if(!this.ctx) return; try { const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.type = 'triangle'; osc.frequency.setValueAtTime(300, this.ctx.currentTime); osc.frequency.linearRampToValueAtTime(100, this.ctx.currentTime + 0.2); gain.gain.setValueAtTime(0.1, this.ctx.currentTime); gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.2); osc.connect(gain); gain.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + 0.2); } catch(e) {}
-        },
-        playTime: function() { this.playTone('sine', 1046.50, 0.1, 0.1); setTimeout(()=>this.playTone('sine', 1318.51, 0.3, 0.1), 80); }
+        playBoost: function() { this.playTone('square', 880, 0.4, 0.05); },
+        playCancel: function() { this.playTone('triangle', 100, 0.2, 0.1); },
+        playTime: function() { this.playTone('sine', 1046.50, 0.3, 0.1); }
     };
 
-    let turn, score, combo, level, resources, boostCount, recoverCount, isBoostActive, currentEnemy;
-    let highScore = 0;
-    let finalScoreForShare = 0;
+    let turn, score, combo, level, resources, boostCount, recoverCount, isBoostActive, currentEnemy, highScore = 0, finalScoreForShare = 0;
 
     window.addEventListener('load', function() {
         const save = localStorage.getItem('cm_highscore_v1');
@@ -302,9 +268,10 @@
 
     function setLang(lang) {
         CUR_LANG = lang;
-        document.getElementById('lang-jp').classList.remove('active');
-        document.getElementById('lang-en').classList.remove('active');
-        document.getElementById('lang-' + (lang==='ja'?'jp':'en')).classList.add('active');
+        document.getElementById('lang-jp').style.color = (lang==='ja'?'#fff':'#888');
+        document.getElementById('lang-jp').style.borderColor = (lang==='ja'?'#ffd700':'#444');
+        document.getElementById('lang-en').style.color = (lang==='en'?'#fff':'#888');
+        document.getElementById('lang-en').style.borderColor = (lang==='en'?'#ffd700':'#444');
         applyLang();
         try { Sound.init(); Sound.playTone('triangle', 880, 0.05); } catch(e){}
     }
@@ -335,17 +302,16 @@
     function toggleRule() {
         const el = document.getElementById('rule-screen');
         el.style.display = (el.style.display === 'none') ? 'flex' : 'none';
-        try { Sound.init(); Sound.playTone('triangle', 440, 0.1); } catch(e){}
+        Sound.init(); Sound.playTone('triangle', 440, 0.1);
     }
 
     function startGame() {
         document.getElementById('title-screen').style.display = 'none';
         resetGameVariables(); spawnEnemy(); updateUI();
-        try { Sound.init(); Sound.playBuzz(); } catch(e) {}
+        Sound.init(); Sound.playBuzz();
     }
 
     function backToTitle() {
-        try { Sound.playTone('triangle', 330, 0.1); } catch(e){}
         document.getElementById('result-overlay').style.display = 'none';
         document.getElementById('title-screen').style.display = 'flex';
         document.getElementById('title-high-score').innerText = highScore.toLocaleString();
@@ -368,14 +334,14 @@
         if (isBoostActive) { isBoostActive = false; boostCount++; Sound.playCancel(); updateUI(); } 
         else {
             if (boostCount <= 0) return;
-            Sound.playBoost(); boostCount--; isBoostActive = true;
+            Sound.playBoost(); boostCount--; isBoostActive = true; Vibrate.long();
             createParticles(e.clientX, e.clientY, '#f1c40f'); flashScreen('#fff'); spawnCutIn("BOOST!!"); shakeScreen('big'); updateUI();
         }
     }
 
     function useRecover(e) {
         if (turn <= 0 || recoverCount <= 0) return;
-        Sound.playTime(); turn++; recoverCount--;
+        Sound.playTime(); turn++; recoverCount--; Vibrate.long();
         createParticles(e.clientX, e.clientY, '#88ccff'); flashScreen('#88ccff'); spawnCutIn("EXTEND!"); updateUI();
     }
 
@@ -398,19 +364,16 @@
         let isSpecialAction = (playerType === 'white' || playerType === 'black');
 
         if (result === 'advantage') {
-            let nextCombo = combo + 1;
-            let comboMult = 1 + (nextCombo * COMBO_RATE);
+            let comboMult = 1 + ((combo + 1) * COMBO_RATE);
             predictedScore = Math.floor(standardScore * comboMult * SCORE_ADVANTAGE_RATE);
-            gainTotal = TOTAL_ADVANTAGE;
-            label = "Buzz!";
+            gainTotal = TOTAL_ADVANTAGE; label = "Buzz!";
         } else if (result === 'neutral') {
-            let currentComboMult = 1 + (combo * COMBO_RATE);
-            predictedScore = Math.floor(standardScore * currentComboMult * SCORE_NORMAL_RATE);
-            gainTotal = TOTAL_NORMAL;
-            label = "Keep";
+            let comboMult = 1 + (combo * COMBO_RATE);
+            predictedScore = Math.floor(standardScore * comboMult * SCORE_NORMAL_RATE);
+            gainTotal = TOTAL_NORMAL; label = "Keep";
         } else {
             predictedScore = Math.floor(standardScore * SCORE_EXTRACT_RATE);
-            if (isSpecialAction) gainTotal = TOTAL_SPECIAL_EXTRACT; else gainTotal = TOTAL_EXTRACT;
+            gainTotal = isSpecialAction ? TOTAL_SPECIAL_EXTRACT : TOTAL_EXTRACT;
             label = "Promo";
         }
         if (predictedScore > 0 && isBoostActive) predictedScore *= 2;
@@ -418,66 +381,24 @@
     }
 
     function checkItemDrop(resultType) {
-        let dropMsg = "";
-        let rateTime = 0; let rateCap = 0;
-        if (resultType === 'advantage') { rateTime = 0.05; rateCap = 0.05; }
-        else if (resultType === 'neutral') { rateTime = 0.02; rateCap = 0.10; }
-        else { rateTime = 0.01; rateCap = 0.20; }
-        if (Math.random() < rateTime) { if(recoverCount < MAX_ITEMS) { recoverCount++; dropMsg = "TIME"; } }
-        else if (Math.random() < rateCap) { if(boostCount < MAX_ITEMS) { boostCount++; dropMsg = "ITEM"; } }
-        return dropMsg;
-    }
-
-    function spawnPopup(x, y, text, color) {
-        const el = document.createElement('div');
-        el.className = 'popup-text'; el.innerText = text; el.style.color = color;
-        if(!x) { x = window.innerWidth / 2; y = window.innerHeight / 2; }
-        el.style.left = (x - 40) + 'px'; el.style.top = (y - 40) + 'px';
-        document.body.appendChild(el); setTimeout(() => el.remove(), 800);
-    }
-    function spawnCutIn(text) {
-        const el = document.createElement('div');
-        el.className = 'cutin-text'; el.innerText = text;
-        document.body.appendChild(el); setTimeout(() => el.remove(), 600);
-    }
-    function shakeScreen(type) {
-        const c = document.getElementById('main-container');
-        c.classList.remove('shake-small', 'shake-big');
-        void c.offsetWidth; c.classList.add(type === 'big' ? 'shake-big' : 'shake-small');
-    }
-    function flashScreen(color) {
-        const f = document.getElementById('flash-fx');
-        f.style.backgroundColor = color;
-        f.classList.remove('flash-anim'); void f.offsetWidth; f.classList.add('flash-anim');
-    }
-    function createParticles(x, y, color) {
-        for(let i=0; i<16; i++) {
-            const p = document.createElement('div');
-            p.className = 'particle'; p.style.backgroundColor = color;
-            p.style.left = x + 'px'; p.style.top = y + 'px';
-            const angle = Math.random() * Math.PI * 2; const dist = 50 + Math.random() * 100;
-            const tx = Math.cos(angle) * dist; const ty = Math.sin(angle) * dist;
-            p.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }], { duration: 600, easing: 'ease-out' });
-            document.body.appendChild(p); setTimeout(() => p.remove(), 600);
-        }
+        let rateTime = (resultType === 'advantage') ? 0.05 : 0.01;
+        let rateCap = (resultType === 'extract') ? 0.20 : 0.05;
+        if (Math.random() < rateTime && recoverCount < MAX_ITEMS) { recoverCount++; return "TIME"; }
+        if (Math.random() < rateCap && boostCount < MAX_ITEMS) { boostCount++; return "ITEM"; }
+        return "";
     }
 
     function battle(playerType, e) {
         if (turn <= 0) return;
         let outcome = calculateOutcome(playerType);
-        let isPlayerSpecial = (playerType === 'white' || playerType === 'black');
-        let dropType = checkItemDrop(outcome.resultType);
-
         if (outcome.resultType === 'advantage' || outcome.resultType === 'neutral') combo++; else combo = 0;
         level++;
 
-        if (isPlayerSpecial) {
+        if (playerType === 'white' || playerType === 'black') {
             let perRes = Math.floor(outcome.res / 3);
             resources.red += perRes; resources.blue += perRes; resources.green += perRes;
         } else {
-            if (playerType === 'red') resources.red += outcome.res;
-            if (playerType === 'blue') resources.blue += outcome.res;
-            if (playerType === 'green') resources.green += outcome.res;
+            resources[playerType] += outcome.res;
         }
 
         score += outcome.score;
@@ -485,59 +406,67 @@
         if (isBoostActive) isBoostActive = false;
 
         let color = "#fff";
-        if(outcome.label === "Buzz!") { color = "#f1c40f"; Sound.playBuzz(); shakeScreen('small'); }
-        else if(outcome.label === "Keep") { color = "#ccc"; Sound.playKeep(); }
+        if(outcome.label === "Buzz!") { color = "#f1c40f"; Sound.playBuzz(); shakeScreen('small'); Vibrate.short(); }
+        else if(outcome.label === "Keep") { color = "#ccc"; Sound.playKeep(); Vibrate.medium(); }
         else { color = "#88ccff"; Sound.playPromo(); }
         
         spawnPopup(e.clientX, e.clientY, `${outcome.label}\n+¥${outcome.score}`, color);
-        if(dropType === "TIME") { setTimeout(()=>{ spawnPopup(e.clientX, e.clientY - 50, "⏰GET!", "#88ccff"); Sound.playTime(); }, 200); }
-        if(dropType === "ITEM") { setTimeout(()=>{ spawnPopup(e.clientX, e.clientY - 50, "🎬GET!", "#f1c40f"); Sound.playBoost(); }, 200); }
+        let drop = checkItemDrop(outcome.resultType);
+        if(drop) { Sound.playTime(); spawnPopup(e.clientX, e.clientY - 50, `${drop} GET!`, "#fff"); }
 
-        spawnEnemy(); checkGameEnd(); updateUI();
+        spawnEnemy(); if (turn <= 0) setTimeout(showResult, 500); updateUI();
     }
 
-    function checkGameEnd() { if (turn <= 0) setTimeout(showResult, 500); }
+    function spawnPopup(x, y, text, color) {
+        const el = document.createElement('div'); el.className = 'popup-text'; el.innerText = text; el.style.color = color;
+        el.style.left = (x || window.innerWidth/2) - 40 + 'px'; el.style.top = (y || window.innerHeight/2) - 40 + 'px';
+        document.body.appendChild(el); setTimeout(() => el.remove(), 800);
+    }
+    function spawnCutIn(text) {
+        const el = document.createElement('div'); el.className = 'cutin-text'; el.innerText = text;
+        document.body.appendChild(el); setTimeout(() => el.remove(), 600);
+    }
+    function shakeScreen(type) {
+        const c = document.getElementById('main-container'); c.classList.remove('shake-small', 'shake-big');
+        void c.offsetWidth; c.classList.add(type === 'big' ? 'shake-big' : 'shake-small');
+    }
+    function flashScreen(color) {
+        const f = document.getElementById('flash-fx'); f.style.backgroundColor = color;
+        f.classList.remove('flash-anim'); void f.offsetWidth; f.classList.add('flash-anim');
+    }
+    function createParticles(x, y, color) {
+        for(let i=0; i<12; i++) {
+            const p = document.createElement('div'); p.className = 'particle'; p.style.backgroundColor = color;
+            p.style.left = x + 'px'; p.style.top = y + 'px';
+            const a = Math.random()*Math.PI*2; const d = 40+Math.random()*60;
+            p.animate([{transform:'translate(0,0)'},{transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px)`}],600);
+            document.body.appendChild(p); setTimeout(()=>p.remove(),600);
+        }
+    }
 
     function getFinalMultipliers() {
         let rRatio = resources.red / RESOURCE_DIVISOR;
         let bRatio = resources.blue / RESOURCE_DIVISOR;
         let gRatio = resources.green / RESOURCE_DIVISOR;
-        let totalMult = 1.0 + rRatio + bRatio + gRatio;
-        return { r: rRatio, b: bRatio, g: gRatio, total: totalMult };
+        return { r: rRatio, b: bRatio, g: gRatio, total: 1.0 + rRatio + bRatio + gRatio };
     }
 
     function showResult() {
-        Sound.playBoost();
-        const overlay = document.getElementById('result-overlay');
-        overlay.style.display = 'flex';
-        let m = getFinalMultipliers();
-        let finalScore = Math.floor(score * m.total);
-        finalScoreForShare = finalScore;
-
+        const m = getFinalMultipliers(); const final = Math.floor(score * m.total); finalScoreForShare = final;
+        document.getElementById('result-overlay').style.display = 'flex';
         document.getElementById('res-base').innerText = score.toLocaleString();
         document.getElementById('res-multiplier').innerText = `x${m.total.toFixed(2)}`;
-        document.getElementById('res-final').innerText = finalScore.toLocaleString();
-
-        if(finalScore > highScore) {
-            highScore = finalScore;
-            localStorage.setItem('cm_highscore_v1', highScore);
-            document.getElementById('new-record-msg').style.display = 'block';
-            shakeScreen('big');
-        }
+        document.getElementById('res-final').innerText = final.toLocaleString();
+        if(final > highScore) { highScore = final; localStorage.setItem('cm_highscore_v1', highScore); document.getElementById('new-record-msg').style.display = 'block'; }
     }
 
     function shareOnX() {
-        const T = TEXT[CUR_LANG];
-        const text = T.shareTxt.replace("{score}", finalScoreForShare.toLocaleString());
-        const hashtags = "ChannelMaster,GameDev";
-        const url = window.location.href; 
-        const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&hashtags=${hashtags}&url=${encodeURIComponent(url)}`;
-        window.open(intentUrl, '_blank');
+        const text = TEXT[CUR_LANG].shareTxt.replace("{score}", finalScoreForShare.toLocaleString());
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(window.location.href)}`, '_blank');
     }
 
     function updateUI() {
         const T = TEXT[CUR_LANG];
-        
         document.getElementById('turn').innerText = turn;
         document.getElementById('score').innerText = score.toLocaleString();
         document.getElementById('combo').innerText = combo;
@@ -545,59 +474,29 @@
         document.getElementById('res-red-val').innerText = resources.red;
         document.getElementById('res-blue-val').innerText = resources.blue;
         document.getElementById('res-green-val').innerText = resources.green;
-        
-        let m = getFinalMultipliers();
+        const m = getFinalMultipliers();
         document.getElementById('rate-red').innerText = `+${m.r.toFixed(2)}x`;
         document.getElementById('rate-blue').innerText = `+${m.b.toFixed(2)}x`;
         document.getElementById('rate-green').innerText = `+${m.g.toFixed(2)}x`;
         document.getElementById('b-total').innerText = m.total.toFixed(2);
-
-        document.getElementById('lbl-boost-name').innerText = T.boostName;
         document.getElementById('lbl-boost-desc').innerText = `${T.boostDesc}${boostCount})`;
-        document.getElementById('lbl-time-name').innerText = T.timeName;
         document.getElementById('lbl-time-desc').innerText = `${T.timeDesc}${recoverCount})`;
-
-        const btnBoost = document.getElementById('btn-boost');
-        if(isBoostActive) { btnBoost.classList.add('active'); btnBoost.disabled = false; }
-        else { btnBoost.classList.remove('active'); btnBoost.disabled = (boostCount <= 0); }
-
+        document.getElementById('btn-boost').disabled = (boostCount <= 0 && !isBoostActive);
+        document.getElementById('btn-boost').style.borderColor = isBoostActive ? '#f1c40f' : '#333';
         document.getElementById('btn-recover').disabled = (recoverCount <= 0);
         document.getElementById('boost-fx').style.display = isBoostActive ? 'block' : 'none';
 
         if(currentEnemy) {
-            const box = document.getElementById('enemy-box');
-            box.style.borderColor = currentEnemy.color;
+            document.getElementById('enemy-box').style.borderColor = currentEnemy.color;
             document.getElementById('enemy-icon').innerText = currentEnemy.icon;
             document.getElementById('enemy-name').innerText = currentEnemy[CUR_LANG].name;
             document.getElementById('enemy-name').style.color = currentEnemy.color;
             document.getElementById('viewer-comment').innerText = currentEnemy[CUR_LANG].comment;
-            document.getElementById('viewer-comment').style.color = '#000';
         }
-        updateButtonLabels();
-    }
-
-    function updateButtonLabels() {
-        if(!currentEnemy) return;
-        const T = TEXT[CUR_LANG];
-        const targets = ['red', 'blue', 'green', 'white', 'black'];
-        targets.forEach(type => {
-            const outcome = calculateOutcome(type);
-            const mainLbl = document.getElementById(`main-${type}`);
-            const subLbl = document.getElementById(`sub-${type}`);
-            
-            mainLbl.innerText = `+¥${outcome.score}`;
-            let resText = (type === 'white' || type === 'black') ? `ALL+${outcome.res/3}` : `+${outcome.res}`;
-            
-            if (outcome.resultType === 'advantage') {
-                subLbl.innerText = `Buzz! | ${resText}`;
-                subLbl.style.color = "#f1c40f"; mainLbl.style.color = "#f1c40f";
-            } else if (outcome.resultType === 'neutral') {
-                subLbl.innerText = `${T.keepName} | ${resText}`;
-                subLbl.style.color = "#ccc"; mainLbl.style.color = "#ccc";
-            } else {
-                subLbl.innerText = `${T.promoName} | ${resText}`;
-                subLbl.style.color = "#88ccff"; mainLbl.style.color = "#88ccff";
-            }
+        ['red','blue','green','white','black'].forEach(t => {
+            const out = calculateOutcome(t);
+            document.getElementById(`main-${t}`).innerText = `+¥${out.score}`;
+            document.getElementById(`sub-${t}`).innerText = `${out.label} | +${out.res}`;
         });
     }
 </script>
