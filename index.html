@@ -9,6 +9,7 @@
     <meta property="og:description" content="Become the top streamer! Strategy simulation game.">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:image" content="ogp.png">
 
     <style>
         body { 
@@ -20,14 +21,14 @@
 
         /* 広告エリア */
         #ad-container {
-            width: 100%; height: 60px; background-color: #222;
+            width: 100%; height: 50px; background-color: #222;
             flex-shrink: 0; display: flex; align-items: center; justify-content: center;
             border-bottom: 1px solid #444; z-index: 1000;
         }
         .ad-placeholder { color: #666; font-size: 0.7em; }
 
         .container { 
-            width: 100%; max-width: 420px; margin: 0 auto; padding: 10px; 
+            width: 100%; max-width: 420px; margin: 0 auto; padding: 5px; 
             flex-grow: 1; box-sizing: border-box; display: flex; flex-direction: column; 
             position: relative; z-index: 10; background-color: #121212; 
         }
@@ -76,7 +77,7 @@
         .item-heal { color: #88ccff; }
 
         .control-panel { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; flex-grow: 1; min-height: 80px;}
-        .special-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 0px; height: 90px; flex-shrink: 0;}
+        .special-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 0px; height: 75px; flex-shrink: 0;}
 
         .btn-action { height: 100%; border: none; border-radius: 12px; color: white; cursor: pointer; position: relative; box-shadow: 0 6px 0 rgba(0,0,0,0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: all 0.05s; overflow: hidden; }
         .btn-action:active { transform: translateY(6px); box-shadow: none; margin-bottom: 6px; }
@@ -101,7 +102,6 @@
         .main-btn { margin-top: 15px; padding: 15px 40px; font-size: 1.2em; font-weight: bold; background: linear-gradient(90deg, #ffd700, #e6ac00); color: #000; border: none; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4); transition: transform 0.1s; width: 100%;}
         .main-btn:active { transform: scale(0.95); }
         
-        /* 言語選択ボタン */
         .lang-select-row { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center;}
         .lang-btn { flex: 1; padding: 10px; font-weight: bold; border: 2px solid #444; background: #222; color: #888; border-radius: 8px; cursor: pointer; }
         .lang-btn.active { border-color: #ffd700; background: #333; color: #fff; box-shadow: 0 0 10px rgba(255,215,0,0.2); }
@@ -133,7 +133,7 @@
 </head>
 <body>
 
-<div id="ad-container"><div class="ad-placeholder">[ AD SPACE (60px) ]</div></div>
+<div id="ad-container"><div class="ad-placeholder">[ AD SPACE ]</div></div>
 <div id="flash-fx" class="flash-overlay"></div>
 <div id="boost-fx" class="boost-overlay"></div>
 
@@ -141,12 +141,10 @@
     <div class="box-style" style="border-color: #4facfe;">
         <div class="title-logo">CHANNEL<br><span style="color:#ffd700">MASTER</span></div>
         <div class="title-sub">Global Edition</div>
-        
         <div class="lang-select-row">
             <button class="lang-btn active" id="lang-jp" onclick="setLang('ja')">🇯🇵 日本語</button>
             <button class="lang-btn" id="lang-en" onclick="setLang('en')">🇺🇸 ENGLISH</button>
         </div>
-
         <div class="high-score-area">
             <div class="high-score-label" id="lbl-best">PERSONAL BEST</div>
             <div class="high-score-val">¥ <span id="title-high-score">0</span></div>
@@ -208,7 +206,18 @@
 </div>
 
 <script>
-    // --- 言語データ ---
+    const TOTAL_ADVANTAGE = 3; const TOTAL_NORMAL = 6; const TOTAL_EXTRACT = 9; const TOTAL_SPECIAL_EXTRACT = 12;
+    const RESOURCE_DIVISOR = 30; const SCORE_ADVANTAGE_RATE = 1.0; const SCORE_NORMAL_RATE = 0.6; const SCORE_EXTRACT_RATE = 0.2;
+    const COMBO_RATE = 0.2; const MAX_ITEMS = 5;
+
+    const TYPES = [
+        { id: 'red',   icon: '🔥', color: '#ff6b6b', ja: { name: 'パッション勢', comment: '熱い展開頼む！' }, en: { name: 'Passion Fan', comment: 'Make it HOT!!' } },
+        { id: 'blue',  icon: '❄️', color: '#4facfe', ja: { name: 'クール勢', comment: '冷静に解説して。' }, en: { name: 'Cool Viewer', comment: 'Analyze this.' } },
+        { id: 'green', icon: '🍀', color: '#43e97b', ja: { name: 'チル勢', comment: 'まったり雑談しよ。' }, en: { name: 'Chill Fan', comment: 'Relaxing vibes.' } },
+        { id: 'white', icon: '🤝', color: '#ffffff', ja: { name: 'VIPゲスト', comment: 'コラボ待ってます！' }, en: { name: 'VIP Guest', comment: 'Collab please!' } },
+        { id: 'black', icon: '👾', color: '#a0a0a0', ja: { name: 'マニア', comment: '普通の配信飽きたわ。' }, en: { name: 'Maniac', comment: 'Boring stream...' } }
+    ];
+
     let CUR_LANG = 'ja';
     const TEXT = {
         ja: {
@@ -241,25 +250,6 @@
         }
     };
 
-    const TYPES = [
-        { id: 'red',   icon: '🔥', color: '#ff6b6b', 
-          ja: { name: 'パッション勢', comment: '熱い展開頼む！' }, 
-          en: { name: 'Passion Fan', comment: 'Make it HOT!!' } },
-        { id: 'blue',  icon: '❄️', color: '#4facfe', 
-          ja: { name: 'クール勢', comment: '冷静に解説して。' }, 
-          en: { name: 'Cool Viewer', comment: 'Analyze this.' } },
-        { id: 'green', icon: '🍀', color: '#43e97b', 
-          ja: { name: 'チル勢', comment: 'まったり雑談しよ。' }, 
-          en: { name: 'Chill Fan', comment: 'Relaxing vibes.' } },
-        { id: 'white', icon: '🤝', color: '#ffffff', 
-          ja: { name: 'VIPゲスト', comment: 'コラボ待ってます！' }, 
-          en: { name: 'VIP Guest', comment: 'Collab please!' } },
-        { id: 'black', icon: '👾', color: '#a0a0a0', 
-          ja: { name: 'マニア', comment: '普通の配信飽きたわ。' }, 
-          en: { name: 'Maniac', comment: 'Boring stream...' } }
-    ];
-
-    // --- Sound Manager ---
     const Sound = {
         ctx: null,
         init: function() { try { window.AudioContext = window.AudioContext || window.webkitAudioContext; this.ctx = new AudioContext(); } catch(e){} },
@@ -296,11 +286,6 @@
         playTime: function() { this.playTone('sine', 1046.50, 0.1, 0.1); setTimeout(()=>this.playTone('sine', 1318.51, 0.3, 0.1), 80); }
     };
 
-    // --- Config ---
-    const TOTAL_ADVANTAGE = 3; const TOTAL_NORMAL = 6; const TOTAL_EXTRACT = 9; const TOTAL_SPECIAL_EXTRACT = 12;
-    const RESOURCE_DIVISOR = 30; const SCORE_ADVANTAGE_RATE = 1.0; const SCORE_NORMAL_RATE = 0.6; const SCORE_EXTRACT_RATE = 0.2;
-    const COMBO_RATE = 0.2; const MAX_ITEMS = 5;
-
     let turn, score, combo, level, resources, boostCount, recoverCount, isBoostActive, currentEnemy;
     let highScore = 0;
     let finalScoreForShare = 0;
@@ -312,7 +297,6 @@
         applyLang();
     });
 
-    // --- Language System ---
     function setLang(lang) {
         CUR_LANG = lang;
         document.getElementById('lang-jp').classList.remove('active');
@@ -324,7 +308,6 @@
 
     function applyLang() {
         const T = TEXT[CUR_LANG];
-        // Title & UI
         document.getElementById('lbl-best').innerText = T.best;
         document.getElementById('btn-start').innerText = T.start;
         document.getElementById('btn-rule').innerText = T.rule;
@@ -334,22 +317,18 @@
         document.getElementById('lbl-total').innerText = T.total;
         document.getElementById('lbl-collab').innerText = T.collab;
         document.getElementById('lbl-prank').innerText = T.prank;
-        // Rules
         document.getElementById('rule-title').innerText = T.ruleTitle;
         document.getElementById('rule-1').innerHTML = T.r1;
         document.getElementById('rule-2').innerHTML = T.r2;
         document.getElementById('rule-3').innerHTML = T.r3;
-        // Results
         document.getElementById('lbl-res-base').innerText = T.resBase;
         document.getElementById('lbl-res-multi').innerText = T.resMulti;
         document.getElementById('lbl-res-total').innerText = T.resTotal;
         document.getElementById('lbl-share').innerText = T.share;
         document.getElementById('lbl-back').innerText = T.back;
-        
         updateUI();
     }
 
-    // --- Main Logic ---
     function toggleRule() {
         const el = document.getElementById('rule-screen');
         el.style.display = (el.style.display === 'none') ? 'flex' : 'none';
@@ -555,7 +534,8 @@
 
     function updateUI() {
         const T = TEXT[CUR_LANG];
-        // 修正点: 削除したIDへの参照を消し、テキスト更新のみを行う
+        
+        // ★修正ポイント: 古いID参照を削除し、動的な値はここで一括更新
         document.getElementById('turn').innerText = turn;
         document.getElementById('score').innerText = score.toLocaleString();
         document.getElementById('combo').innerText = combo;
@@ -570,7 +550,7 @@
         document.getElementById('rate-green').innerText = `+${m.g.toFixed(2)}x`;
         document.getElementById('b-total').innerText = m.total.toFixed(2);
 
-        // アイテム残数はテキスト内で更新
+        // アイテム残数表示を言語設定に合わせて更新
         document.getElementById('lbl-boost-name').innerText = T.boostName;
         document.getElementById('lbl-boost-desc').innerText = `${T.boostDesc}${boostCount})`;
         document.getElementById('lbl-time-name').innerText = T.timeName;
@@ -622,4 +602,3 @@
 </script>
 </body>
 </html>
-
