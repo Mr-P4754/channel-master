@@ -12,7 +12,6 @@
         #ad-container { width: 100%; height: 50px; background-color: #222; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #444; z-index: 1000; }
         .container { width: 100%; max-width: 420px; margin: 0 auto; padding: 10px 15px; flex-grow: 1; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; background-color: #121212; }
         
-        /* UI Components */
         .top-bar { display: flex; justify-content: space-between; padding: 5px 15px; background: #1e1e1e; border-radius: 8px; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid #ffd700; flex-shrink: 0; }
         .score-val { font-size: 2.5em; font-weight: 800; line-height: 1; color: #fff; text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);}
         .enemy-container { position: relative; width: 100%; margin: 0 auto 5px; background: #252525; border-radius: 12px; padding: 10px 0; border: 2px solid #555; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100px; flex-shrink: 0; }
@@ -23,7 +22,8 @@
         .res-rate { font-size: 0.75em; color: #ffd700; display: block; margin-top: 2px; }
 
         .item-area { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; flex-shrink: 0; }
-        .btn-item { padding: 8px; border: none; border-radius: 8px; font-weight: bold; color: white; background: #2f2f35; border-bottom: 3px solid #1a1a1d; font-size: 0.8em;}
+        .btn-item { padding: 8px; border: none; border-radius: 8px; font-weight: bold; color: white; background: #2f2f35; border-bottom: 3px solid #1a1a1d; font-size: 0.8em; transition: all 0.1s;}
+        .btn-item.active { background: linear-gradient(135deg, #5e4c00, #332a00); border: 2px solid #f1c40f; border-bottom: none; transform: translateY(2px); box-shadow: 0 0 10px rgba(241, 196, 15, 0.5); }
         
         .control-panel { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; height: 85px; flex-shrink: 0;}
         .special-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; height: 85px; flex-shrink: 0;}
@@ -38,23 +38,32 @@
         .bg-white { background: linear-gradient(135deg, #f8f9fa, #dee2e6); color: #333; }
         .bg-black { background: linear-gradient(135deg, #9b5de5, #5a189a); }
 
+        /* Effects */
+        .flash-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 80; opacity: 0; }
+        .flash-anim { animation: screenFlash 0.3s ease-out; }
+        @keyframes screenFlash { 0% { background-color: rgba(255, 255, 255, 0.8); opacity: 1; } 100% { background-color: transparent; opacity: 0; } }
+        .particle { position: fixed; width: 8px; height: 8px; border-radius: 50%; pointer-events: none; z-index: 90; }
+        .cutin-text { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 3.5em; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(255,215,0,0.8), 4px 4px 0px #000; z-index: 95; pointer-events: none; white-space: nowrap; animation: cutIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes cutIn { 0% { transform: translate(-50%, -50%) scale(0) rotate(-15deg); opacity: 0; } 50% { transform: translate(-50%, -50%) scale(1.2) rotate(0deg); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; } }
+        .boost-overlay { position: fixed; top:0; left:0; width:100%; height:100%; border: 4px solid #f1c40f; pointer-events: none; display: none; z-index: 50; box-shadow: inset 0 0 50px rgba(241, 196, 15, 0.3); animation: pulseBorder 0.8s infinite; }
+        @keyframes pulseBorder { 0% { opacity: 0.4; } 50% { opacity: 0.8; } 100% { opacity: 0.4; } }
+
         /* Overlays */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .res-box { background: #1f1f23; padding: 20px; border-radius: 16px; border: 2px solid #ffd700; width: 90%; max-width: 380px; text-align: center; }
         .lang-btn { flex: 1; padding: 10px; border-radius: 8px; background: #222; color: #888; border: 2px solid #444; font-weight: bold; cursor: pointer; }
         .lang-btn.active { border-color: #ffd700; color: #fff; }
-        
         .res-grid { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; text-align: left; font-family: monospace; }
         .res-item-row { display: flex; justify-content: space-between; font-size: 0.8em; }
         .res-divider { height: 1px; background: #444; margin: 4px 0; }
         .res-total-val { font-size: 2.5em; font-weight: 900; color: #ffd700; text-shadow: 0 0 15px rgba(255,215,0,0.4); margin: 10px 0;}
         .main-btn { margin-top: 10px; padding: 12px; font-size: 1.1em; font-weight: bold; background: linear-gradient(90deg, #ffd700, #e6ac00); color: #000; border: none; border-radius: 30px; width: 100%; cursor: pointer;}
-        .boost-overlay { position: fixed; top:0; left:0; width:100%; height:100%; border: 4px solid #f1c40f; pointer-events: none; display: none; z-index: 50; }
     </style>
 </head>
 <body>
 
 <div id="ad-container"><div class="ad-placeholder">[ AD SPACE ]</div></div>
+<div id="flash-fx" class="flash-overlay"></div>
 <div id="boost-fx" class="boost-overlay"></div>
 
 <div id="title-screen" class="overlay">
@@ -66,18 +75,18 @@
             <button class="lang-btn" id="btn-lang-en" onclick="setLang('en')">🇺🇸 ENGLISH</button>
         </div>
         <div style="background:#000; padding:10px; border-radius:8px; margin:10px 0; border:1px solid #333;">
-            <div id="lbl-best" style="font-size:0.8em; color:#888;">PERSONAL BEST</div>
+            <div id="lbl-best" style="font-size:0.8em; color:#888;">自己ベスト</div>
             <div style="font-size:1.5em; font-weight:bold; color:#ffd700;">¥ <span id="title-hs">0</span></div>
         </div>
-        <button class="main-btn" onclick="startGame()" id="btn-start-ui">START STREAM</button>
+        <button class="main-btn" onclick="startGame()" id="btn-start-ui">配信開始</button>
         <a href="privacy.html" style="color:#666; font-size:0.7em; display:block; margin-top:15px;">Privacy Policy</a>
     </div>
 </div>
 
 <div class="container" id="main-container">
-    <div class="top-bar"><div>CHANNEL MASTER</div><div style="color:#88ccff;"><span id="ui-turn">30</span> <span id="lbl-turns-left">Turns Left</span></div></div>
+    <div class="top-bar"><div>CHANNEL MASTER</div><div style="color:#88ccff;"><span id="ui-turn">30</span> <span id="lbl-turns-left">残り枠</span></div></div>
     <div class="score-board">
-        <div style="font-size:0.8em; color:#ffd700; font-weight:bold;" id="lbl-est-revenue">ESTIMATED REVENUE</div>
+        <div style="font-size:0.8em; color:#ffd700; font-weight:bold;" id="lbl-est-revenue">推定収益</div>
         <div class="score-val">¥<span id="ui-score">0</span></div>
         <div style="color:#f1c40f; font-weight:bold;"><span id="ui-combo">0</span> <span id="lbl-buzz-chain">Buzz Chain!</span></div>
     </div>
@@ -91,11 +100,11 @@
         <div class="res-item">🔥 <span id="ui-res-red">0</span><br><span class="res-rate" id="ui-rate-red">+0.00x</span></div>
         <div class="res-item">❄️ <span id="ui-res-blue">0</span><br><span class="res-rate" id="ui-rate-blue">+0.00x</span></div>
         <div class="res-item">🍀 <span id="ui-res-green">0</span><br><span class="res-rate" id="ui-rate-green">+0.00x</span></div>
-        <div style="grid-column: span 3; border-top:1px solid #333; padding-top:4px; font-weight:900;"><span id="lbl-total-mult">TOTAL MULTIPLIER</span>: x<span id="ui-rate-total">1.00</span></div>
+        <div style="grid-column: span 3; border-top:1px solid #333; padding-top:4px; font-weight:900;"><span id="lbl-total-mult">TOTAL倍率</span>: x<span id="ui-rate-total">1.00</span></div>
     </div>
     <div class="item-area">
-        <button class="btn-item" onclick="useBooster(event)"><span id="lbl-boost">🎬 BOOST</span> (L:<span id="ui-boost-count">3</span>)</button>
-        <button class="btn-item" onclick="useRecover(event)"><span id="lbl-time">⏰ TIME</span> (L:<span id="ui-time-count">3</span>)</button>
+        <button class="btn-item" onclick="useBooster(event)" id="ui-btn-boost"><span id="lbl-boost">拡散ブースト</span> (残:<span id="ui-boost-count">3</span>)</button>
+        <button class="btn-item" onclick="useRecover(event)" id="ui-btn-time"><span id="lbl-time">延長枠申請</span> (残:<span id="ui-time-count">3</span>)</button>
     </div>
     <div class="control-panel">
         <button class="btn-action bg-red" onclick="battle('red')">🔥<span class="btn-main-text" id="btn-score-red"></span><span class="btn-sub-text" id="btn-lbl-red"></span></button>
@@ -110,12 +119,12 @@
 
 <div id="result-overlay" class="overlay" style="display:none;">
     <div class="res-box">
-        <div style="font-size:1.1em; font-weight:900; color:#ffd700; border-bottom:1px solid #ffd700; padding-bottom:5px; margin-bottom:15px;" id="lbl-res-title">STREAM RESULT</div>
+        <div style="font-size:1.1em; font-weight:900; color:#ffd700; border-bottom:1px solid #ffd700; padding-bottom:5px; margin-bottom:15px;" id="lbl-res-title">配信リザルト</div>
         <div class="res-grid" id="ui-res-grid"></div>
-        <div style="font-size:0.8em; color:#aaa;" id="lbl-total-revenue">TOTAL REVENUE</div>
+        <div style="font-size:0.8em; color:#aaa;" id="lbl-total-revenue">最終収益</div>
         <div class="res-total-val">¥ <span id="ui-res-final">0</span></div>
-        <button class="main-btn" onclick="shareOnX()" id="btn-share-ui">𝕏 SHARE RESULT</button>
-        <button class="main-btn" style="background:#444; color:#fff;" onclick="backToTitle()" id="btn-return-ui">RETURN TO TITLE</button>
+        <button class="main-btn" onclick="shareOnX()" id="btn-share-ui">𝕏 ポストする</button>
+        <button class="main-btn" style="background:#444; color:#fff;" onclick="backToTitle()" id="btn-return-ui">タイトルへ</button>
     </div>
 </div>
 
@@ -123,13 +132,14 @@
     const Vibrate = {
         short: () => { if (navigator.vibrate) navigator.vibrate(15); }, 
         medium: () => { if (navigator.vibrate) navigator.vibrate(40); }, 
-        long: () => { if (navigator.vibrate) navigator.vibrate([60, 50, 60]); }
+        long: () => { if (navigator.vibrate) navigator.vibrate([60, 50, 60]); },
+        cancel: () => { if (navigator.vibrate) navigator.vibrate(20); }
     };
 
     const ENEMY_DATA = [
         { id: 'red', icon: '🔥', color: '#ff6b6b', ja: { name: 'パッション勢', comment: '熱い展開頼む！' }, en: { name: 'Passion Fan', comment: 'Make it hot!' } },
         { id: 'blue', icon: '❄️', color: '#4facfe', ja: { name: 'クール勢', comment: '冷静に。' }, en: { name: 'Cool Viewer', comment: 'Keep it calm.' } },
-        { id: 'green', icon: '🍀', color: '#43e97b', ja: { name: 'チル勢', comment: 'まったり。' }, en: { name: 'Chill Fan', comment: 'Relaxing vibes.' } },
+        { id: 'green', icon: '🍀', color: '#43e97b', ja: { name: 'チル勢', comment: 'まったり雑談しよ。' }, en: { name: 'Chill Fan', comment: 'Relaxing vibes.' } },
         { id: 'white', icon: '🤝', color: '#ffffff', ja: { name: 'VIPゲスト', comment: 'コラボ待機！' }, en: { name: 'VIP Guest', comment: 'Collab please!' } },
         { id: 'black', icon: '👾', color: '#a0a0a0', ja: { name: 'マニア', comment: '刺激が欲しい。' }, en: { name: 'Maniac', comment: 'Surprise me!' } }
     ];
@@ -138,18 +148,39 @@
 
     const TEXT = {
         ja: {
-            start: "配信開始", best: "自己ベスト", turns: "残り枠", revenue: "推定収益", chain: "コンボ！", totalMult: "TOTAL倍率",
-            boost: "🎬 拡散", time: "⏰ 延長", collab: "🤝 コラボ", prank: "👻 ドッキリ", resTitle: "配信リザルト", totalRev: "最終収益",
+            start: "配信開始", best: "自己ベスト", turns: "残り枠", revenue: "推定収益", chain: "Buzz Chain!", totalMult: "TOTAL倍率",
+            boost: "拡散ブースト", time: "延長枠申請", collab: "🤝 コラボ", prank: "👻 ドッキリ", resTitle: "配信リザルト", totalRev: "最終収益",
             share: "ポストする", back: "タイトルへ", base: "スパチャ総額", bonus: "資材ボーナス", multi: "最終倍率",
             shareTxt: "CHANNEL MASTERで ¥{score} の収益を上げました！"
         },
         en: {
             start: "START STREAM", best: "PERSONAL BEST", turns: "Turns Left", revenue: "EST. REVENUE", chain: "Buzz Chain!", totalMult: "TOTAL MULTIPLIER",
-            boost: "🎬 BOOST", time: "⏰ TIME", collab: "🤝 COLLAB", prank: "👻 PRANK", resTitle: "STREAM RESULT", totalRev: "TOTAL REVENUE",
+            boost: "Viral Boost", time: "Extra Time", collab: "🤝 COLLAB", prank: "👻 PRANK", resTitle: "STREAM RESULT", totalRev: "TOTAL REVENUE",
             share: "𝕏 SHARE", back: "TITLE", base: "Base Revenue", bonus: "Bonus Amount", multi: "Total Multiplier",
             shareTxt: "I earned ¥{score} in CHANNEL MASTER!"
         }
     };
+
+    // 演出用関数
+    function flashScreen() {
+        const el = document.getElementById('flash-fx');
+        el.classList.remove('flash-anim'); void el.offsetWidth; el.classList.add('flash-anim');
+    }
+
+    function createParticles(x, y, color) {
+        for(let i=0; i<12; i++) {
+            const p = document.createElement('div'); p.className = 'particle'; p.style.backgroundColor = color;
+            p.style.left = x + 'px'; p.style.top = y + 'px';
+            const a = Math.random()*Math.PI*2; const d = 40+Math.random()*60;
+            p.animate([{transform:'translate(0,0)'},{transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px)`}],600);
+            document.body.appendChild(p); setTimeout(()=>p.remove(),600);
+        }
+    }
+
+    function spawnCutIn(text) {
+        const el = document.createElement('div'); el.className = 'cutin-text'; el.innerText = text;
+        document.body.appendChild(el); setTimeout(() => el.remove(), 600);
+    }
 
     function setLang(lang) {
         CUR_LANG = lang;
@@ -181,8 +212,7 @@
         document.getElementById('title-screen').style.display = 'none';
         turn = 30; score = 0; combo = 0; level = 1; resources = { red:0, blue:0, green:0 };
         boostCount = 3; recoverCount = 3; isBoostActive = false;
-        spawnEnemy();
-        updateUI(); 
+        spawnEnemy(); updateUI(); 
     }
 
     function spawnEnemy() {
@@ -246,6 +276,26 @@
         if (final > hs) localStorage.setItem('cm_highscore_v1', final);
     }
 
+    function useBooster(e) {
+        if(isBoostActive) { 
+            isBoostActive = false; boostCount++; Vibrate.cancel(); updateUI(); 
+        } else if(boostCount > 0) {
+            boostCount--; isBoostActive = true; 
+            Vibrate.long(); flashScreen(); spawnCutIn("BOOST!!");
+            createParticles(e.clientX, e.clientY, '#f1c40f');
+            updateUI();
+        }
+    }
+
+    function useRecover(e) {
+        if(recoverCount > 0) {
+            recoverCount--; turn++; 
+            Vibrate.long(); flashScreen(); spawnCutIn("EXTEND!");
+            createParticles(e.clientX, e.clientY, '#88ccff');
+            updateUI();
+        }
+    }
+
     function updateUI() {
         document.getElementById('ui-turn').innerText = turn;
         document.getElementById('ui-score').innerText = score.toLocaleString();
@@ -259,9 +309,14 @@
         document.getElementById('ui-rate-blue').innerText = `+${rB.toFixed(2)}x`;
         document.getElementById('ui-rate-green').innerText = `+${rG.toFixed(2)}x`;
         document.getElementById('ui-rate-total').innerText = (1 + rR + rB + rG).toFixed(2);
+        
         document.getElementById('ui-boost-count').innerText = boostCount;
         document.getElementById('ui-time-count').innerText = recoverCount;
+        
+        // アイテムボタンのアクティブ状態
+        document.getElementById('ui-btn-boost').classList.toggle('active', isBoostActive);
         document.getElementById('boost-fx').style.display = isBoostActive ? 'block' : 'none';
+
         if (currentEnemy) {
             document.getElementById('ui-enemy-icon').innerText = currentEnemy.icon;
             document.getElementById('ui-enemy-name').innerText = currentEnemy[CUR_LANG].name;
@@ -278,8 +333,6 @@
         });
     }
 
-    function useBooster() { if(boostCount>0 && !isBoostActive) { boostCount--; isBoostActive=true; Vibrate.long(); updateUI(); } }
-    function useRecover() { if(recoverCount>0) { recoverCount--; turn++; Vibrate.long(); updateUI(); } }
     function backToTitle() { location.reload(); }
     function shareOnX() {
         const f = document.getElementById('ui-res-final').innerText;
