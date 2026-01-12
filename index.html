@@ -10,10 +10,8 @@
     <style>
         body { font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; background-color: #000; color: #fff; padding: 0; margin: 0; user-select: none; overflow: hidden; touch-action: manipulation; display: flex; flex-direction: column; height: 100dvh; }
         #ad-container { width: 100%; height: 50px; background-color: #222; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #444; z-index: 1000; }
-        .ad-placeholder { color: #666; font-size: 0.7em; }
         .container { width: 100%; max-width: 420px; margin: 0 auto; padding: 10px 15px; flex-grow: 1; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; background-color: #121212; }
         
-        /* UI Components */
         .top-bar { display: flex; justify-content: space-between; padding: 5px 15px; background: #1e1e1e; border-radius: 8px; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid #ffd700; flex-shrink: 0; }
         .score-val { font-size: 2.5em; font-weight: 800; line-height: 1; color: #fff; text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);}
         .enemy-container { position: relative; width: 100%; margin: 0 auto 5px; background: #252525; border-radius: 12px; padding: 10px 0; border: 2px solid #555; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100px; flex-shrink: 0; }
@@ -21,15 +19,13 @@
         .resource-area { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; background: #1e1e1e; padding: 6px; border-radius: 8px; margin-bottom: 5px; border: 1px solid #333; flex-shrink: 0; }
         .item-area { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; flex-shrink: 0; }
         .btn-item { padding: 8px; border: none; border-radius: 8px; font-weight: bold; color: white; background: #2f2f35; border-bottom: 3px solid #1a1a1d; }
-        .btn-item:disabled { opacity: 0.3; }
 
-        /* Panel Settings */
         .control-panel { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; height: 85px; flex-shrink: 0;}
         .special-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; height: 85px; flex-shrink: 0;}
         .btn-action { height: 100%; border: none; border-radius: 12px; color: white; cursor: pointer; position: relative; box-shadow: 0 6px 0 rgba(0,0,0,0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: all 0.05s; overflow: hidden; }
         .btn-action:active { transform: translateY(6px); box-shadow: none; margin-bottom: 6px; }
         
-        .btn-main-text { font-size: 11px; font-weight: 900; margin-bottom: 2px; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+        .btn-main-text { font-size: 11px; font-weight: 900; margin-bottom: 2px; }
         .btn-sub-text { font-size: 9px; font-weight: 900; background: rgba(0,0,0,0.7); padding: 2px 6px; border-radius: 10px; min-width: 80%; }
 
         .bg-red { background: linear-gradient(135deg, #ef476f, #d6336c); }
@@ -51,23 +47,22 @@
 
 <div id="title-screen" class="overlay">
     <div class="box-style">
-        <div style="font-size:2.5em; font-weight:900; line-height:1.1;">CHANNEL<br><span style="color:#ffd700">MASTER</span></div>
+        <div style="font-size:2.5em; font-weight:900;">CHANNEL<br><span style="color:#ffd700">MASTER</span></div>
         <p style="color:#888;">Global Edition</p>
         <div style="background:#000; padding:10px; border-radius:8px; margin:20px 0; border:1px solid #333;">
             <div style="font-size:0.8em; color:#888;">PERSONAL BEST</div>
-            <div style="font-size:1.5em; font-weight:bold; color:#ffd700;">¥ <span id="title-high-score">0</span></div>
+            <div style="font-size:1.5em; font-weight:bold; color:#ffd700;">¥ <span id="title-hs">0</span></div>
         </div>
         <button class="main-btn" onclick="startGame()">START STREAM</button>
-        <a href="privacy.html" style="color:#666; font-size:0.7em; display:block; margin-top:15px;">Privacy Policy</a>
     </div>
 </div>
 
 <div class="container" id="main-container">
-    <div class="top-bar"><div>CHANNEL MASTER</div><div style="color:#88ccff; font-weight:800;"><span id="turn">30</span> Turns Left</div></div>
+    <div class="top-bar"><div>CHANNEL MASTER</div><div style="color:#88ccff;"><span id="turn">30</span> Turns Left</div></div>
     <div class="score-board">
         <div style="font-size:0.8em; color:#ffd700; font-weight:bold;">ESTIMATED REVENUE</div>
         <div class="score-val">¥<span id="score">0</span></div>
-        <div style="color:#f1c40f; font-style:italic; font-weight:bold;"><span id="combo">0</span> Buzz Chain!</div>
+        <div style="color:#f1c40f; font-weight:bold;"><span id="combo">0</span> Buzz Chain!</div>
     </div>
     <div class="enemy-container" id="enemy-box"><div class="viewer-comment" id="viewer-comment">---</div><div style="position:absolute; top:10px; right:10px; background:#333; padding:2px 6px; border-radius:6px; font-size:0.7em;">Lv.<span id="level">1</span></div><div id="enemy-icon" style="font-size:3.2em;">🔴</div><div id="enemy-name" style="font-weight:bold;">---</div></div>
     <div class="resource-area">
@@ -77,17 +72,17 @@
         <div style="grid-column: span 3; border-top:1px solid #333; margin-top:4px; font-weight:900;">TOTAL倍率: x<span id="b-total">1.00</span></div>
     </div>
     <div class="item-area">
-        <button class="btn-item" id="btn-boost" onclick="useBooster(event)"><span style="color:#f1c40f;">🎬 BOOST</span><br><span id="lbl-boost-desc" style="font-size:0.7em;"></span></button>
-        <button class="btn-item" id="btn-recover" onclick="useRecover(event)"><span style="color:#88ccff;">⏰ TIME</span><br><span id="lbl-time-desc" style="font-size:0.7em;"></span></button>
+        <button class="btn-item" onclick="useBooster(event)"><span style="color:#f1c40f;">🎬 BOOST</span><br><span id="boost-count" style="font-size:0.7em;">L: 3</span></button>
+        <button class="btn-item" onclick="useRecover(event)"><span style="color:#88ccff;">⏰ TIME</span><br><span id="time-count" style="font-size:0.7em;">L: 3</span></button>
     </div>
     <div class="control-panel">
-        <button class="btn-action bg-red" onclick="battle('red', event)">🔥<span class="btn-main-text" id="main-red">---</span><span class="btn-sub-text" id="sub-red">---</span></button>
-        <button class="btn-action bg-blue" onclick="battle('blue', event)">❄️<span class="btn-main-text" id="main-blue">---</span><span class="btn-sub-text" id="sub-blue">---</span></button>
-        <button class="btn-action bg-green" onclick="battle('green', event)">🍀<span class="btn-main-text" id="main-green">---</span><span class="btn-sub-text" id="sub-green">---</span></button>
+        <button class="btn-action bg-red" onclick="battle('red')">🔥<span class="btn-main-text" id="main-red"></span><span class="btn-sub-text" id="sub-red"></span></button>
+        <button class="btn-action bg-blue" onclick="battle('blue')">❄️<span class="btn-main-text" id="main-blue"></span><span class="btn-sub-text" id="sub-blue"></span></button>
+        <button class="btn-action bg-green" onclick="battle('green')">🍀<span class="btn-main-text" id="main-green"></span><span class="btn-sub-text" id="sub-green"></span></button>
     </div>
     <div class="special-row">
-        <button class="btn-action bg-white" onclick="battle('white', event)"><div style="font-size:0.7em; font-weight:900;">🤝 COLLAB</div><span class="btn-main-text" id="main-white">---</span><span class="btn-sub-text" id="sub-white">---</span></button>
-        <button class="btn-action bg-black" onclick="battle('black', event)"><div style="font-size:0.7em; font-weight:900;">👻 PRANK</div><span class="btn-main-text" id="main-black">---</span><span class="btn-sub-text" id="sub-black">---</span></button>
+        <button class="btn-action bg-white" onclick="battle('white')">🤝 COLLAB<span class="btn-main-text" id="main-white"></span><span class="btn-sub-text" id="sub-white"></span></button>
+        <button class="btn-action bg-black" onclick="battle('black')">👻 PRANK<span class="btn-main-text" id="main-black"></span><span class="btn-sub-text" id="sub-black"></span></button>
     </div>
 </div>
 
@@ -95,30 +90,11 @@
     <div class="box-style">
         <div style="font-weight:bold; color:#888; margin-bottom:10px;">STREAM ENDED</div>
         <div style="font-size:2.5em; font-weight:900; color:#ffd700; margin-bottom:20px;">¥ <span id="res-final">0</span></div>
-        <button class="main-btn" onclick="shareOnX()">𝕏 SHARE</button>
-        <button class="main-btn" style="background:#444; color:#fff;" onclick="backToTitle()">TITLE</button>
+        <button class="main-btn" onclick="location.reload()">TITLE</button>
     </div>
 </div>
 
 <script>
-    const Vibrate = {
-        short: () => { if (navigator.vibrate) navigator.vibrate(15); }, 
-        medium: () => { if (navigator.vibrate) navigator.vibrate(40); }, 
-        long: () => { if (navigator.vibrate) navigator.vibrate([60, 50, 60]); }
-    };
-
-    const Sound = {
-        ctx: null,
-        init: function() { try { window.AudioContext = window.AudioContext || window.webkitAudioContext; this.ctx = new AudioContext(); } catch(e){} },
-        playTone: function(f, d, v=0.1) {
-            if (!this.ctx) return;
-            const o = this.ctx.createOscillator(); const g = this.ctx.createGain();
-            o.frequency.setValueAtTime(f, this.ctx.currentTime); g.gain.setValueAtTime(v, this.ctx.currentTime);
-            g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + d);
-            o.connect(g); g.connect(this.ctx.destination); o.start(); o.stop(this.ctx.currentTime + d);
-        }
-    };
-
     const TYPES = [
         { id: 'red', icon: '🔥', color: '#ff6b6b', name: 'Passion', comment: '熱い展開頼む！' },
         { id: 'blue', icon: '❄️', color: '#4facfe', name: 'Cool', comment: '冷静に解説して。' },
@@ -127,20 +103,31 @@
         { id: 'black', icon: '👾', color: '#a0a0a0', name: 'Maniac', comment: '刺激が欲しい。' }
     ];
 
-    let turn, score, combo, level, resources, boostCount, recoverCount, isBoostActive, currentEnemy, highScore = 0;
+    let turn=30, score=0, combo=0, level=1, resources={red:0,blue:0,green:0}, boostCount=3, recoverCount=3, isBoostActive=false, currentEnemy=TYPES[0];
 
     function startGame() {
         document.getElementById('title-screen').style.display = 'none';
-        turn = 30; score = 0; combo = 0; level = 1; resources = { red: 0, blue: 0, green: 0 };
+        turn = 30; score = 0; combo = 0; level = 1; resources = { red:0, blue:0, green:0 };
         boostCount = 3; recoverCount = 3; isBoostActive = false;
-        highScore = localStorage.getItem('cm_highscore_v1') || 0;
-        document.getElementById('title-high-score').innerText = parseInt(highScore).toLocaleString();
-        Sound.init(); spawnEnemy(); updateUI();
+        spawnEnemy();
+        updateUI();
     }
 
     function spawnEnemy() {
         currentEnemy = TYPES[Math.floor(Math.random() * TYPES.length)];
-        updateUI();
+    }
+
+    function calculateOutcome(pType) {
+        if (!currentEnemy) return { score:0, res:0, label:"", type:"" };
+        const match = getMatchup(pType, currentEnemy.id);
+        const base = 100 * (1 + (level * 0.1));
+        let s = 0, r = 0, lbl = "";
+
+        if (match === 'advantage') { s = Math.floor(base * (1 + (combo * 0.2))); r = 3; lbl = "Buzz!"; }
+        else if (match === 'neutral') { s = Math.floor(base * 0.6 * (1 + (combo * 0.1))); r = 6; lbl = "Keep"; }
+        else { s = Math.floor(base * 0.2); r = (pType==='white'||pType==='black') ? 12 : 9; lbl = "Promo"; }
+        if (isBoostActive) s *= 2;
+        return { score: s, res: r, label: lbl, type: match };
     }
 
     function getMatchup(p, e) {
@@ -152,58 +139,23 @@
         return 'extract';
     }
 
-    function calculateOutcome(pType) {
-        if (!currentEnemy) return { score: 0, res: 0, label: "", type: "" };
-        const match = getMatchup(pType, currentEnemy.id);
-        const base = 100 * (1 + (level * 0.1));
-        let s = 0, r = 0, lbl = "";
-
-        if (match === 'advantage') {
-            s = Math.floor(base * (1 + (combo * 0.2))); r = 3; lbl = "Buzz!";
-        } else if (match === 'neutral') {
-            s = Math.floor(base * 0.6 * (1 + (combo * 0.1))); r = 6; lbl = "Keep";
-        } else {
-            s = Math.floor(base * 0.2); r = (pType === 'white' || pType === 'black') ? 12 : 9; lbl = "Promo";
-        }
-        if (isBoostActive) s *= 2;
-        return { score: s, res: r, label: lbl, type: match };
-    }
-
-    function battle(pType, e) {
+    function battle(pType) {
         if (turn <= 0) return;
         const out = calculateOutcome(pType);
-        if (out.type === 'advantage' || out.type === 'neutral') combo++; else combo = 0;
-        
-        if (pType === 'white' || pType === 'black') {
-            let perRes = Math.floor(out.res / 3);
-            resources.red += perRes; resources.blue += perRes; resources.green += perRes;
-        } else { resources[pType] += out.res; }
-
-        score += out.score; turn--; level++;
-        if (out.type === 'advantage') Vibrate.short(); else if (out.type === 'neutral') Vibrate.medium();
-        
-        if (out.type === 'advantage' && Math.random() < 0.1 && recoverCount < 5) recoverCount++;
-        if (out.type === 'extract' && Math.random() < 0.1 && boostCount < 5) boostCount++;
-
-        isBoostActive = false;
-        spawnEnemy(); if (turn <= 0) showResult(); updateUI();
+        if (out.type !== 'extract') combo++; else combo = 0;
+        if (pType==='white'||pType==='black') { resources.red+=out.res/3; resources.blue+=out.res/3; resources.green+=out.res/3; }
+        else { resources[pType] += out.res; }
+        score += out.score; turn--; level++; isBoostActive = false;
+        spawnEnemy();
+        if (turn <= 0) {
+            const m = 1 + (resources.red + resources.blue + resources.green) / 30;
+            document.getElementById('res-final').innerText = Math.floor(score * m).toLocaleString();
+            document.getElementById('result-overlay').style.display = 'flex';
+        } else { updateUI(); }
     }
 
-    function showResult() {
-        const m = 1 + (resources.red + resources.blue + resources.green) / 30;
-        const final = Math.floor(score * m);
-        document.getElementById('res-final').innerText = final.toLocaleString();
-        document.getElementById('result-overlay').style.display = 'flex';
-        if (final > highScore) localStorage.setItem('cm_highscore_v1', final);
-    }
-
-    function useBooster(e) { if(boostCount>0 && !isBoostActive) { boostCount--; isBoostActive=true; Vibrate.long(); updateUI(); } }
-    function useRecover(e) { if(recoverCount>0) { recoverCount--; turn++; Vibrate.long(); updateUI(); } }
-    function backToTitle() { location.reload(); }
-    function shareOnX() {
-        const final = document.getElementById('res-final').innerText;
-        window.open(`https://twitter.com/intent/tweet?text=Earned ¥${final} in CHANNEL MASTER!&url=${encodeURIComponent(window.location.href)}`, '_blank');
-    }
+    function useBooster() { if(boostCount>0 && !isBoostActive) { boostCount--; isBoostActive=true; updateUI(); } }
+    function useRecover() { if(recoverCount>0) { recoverCount--; turn++; updateUI(); } }
 
     function updateUI() {
         document.getElementById('turn').innerText = turn;
@@ -215,15 +167,9 @@
         document.getElementById('res-green-val').innerText = Math.floor(resources.green);
         
         const m = 1 + (resources.red + resources.blue + resources.green) / 30;
-        document.getElementById('rate-red').innerText = `+${(resources.red/30).toFixed(2)}x`;
-        document.getElementById('rate-blue').innerText = `+${(resources.blue/30).toFixed(2)}x`;
-        document.getElementById('rate-green').innerText = `+${(resources.green/30).toFixed(2)}x`;
         document.getElementById('b-total').innerText = m.toFixed(2);
-        
-        document.getElementById('lbl-boost-desc').innerText = `L: ${boostCount}`;
-        document.getElementById('lbl-time-desc').innerText = `L: ${recoverCount}`;
-        document.getElementById('btn-boost').disabled = (boostCount <= 0 && !isBoostActive);
-        document.getElementById('btn-recover').disabled = (recoverCount <= 0);
+        document.getElementById('boost-count').innerText = `L: ${boostCount}`;
+        document.getElementById('time-count').innerText = `L: ${recoverCount}`;
         document.getElementById('boost-fx').style.display = isBoostActive ? 'block' : 'none';
 
         if (currentEnemy) {
@@ -234,18 +180,20 @@
         }
 
         ['red','blue','green','white','black'].forEach(t => {
-            const res = calculateOutcome(t);
+            const out = calculateOutcome(t);
             const main = document.getElementById(`main-${t}`);
             const sub = document.getElementById(`sub-${t}`);
-            main.innerText = `+¥${res.score}`;
-            sub.innerText = `${res.label} | +${res.res}`;
-
-            let color = "#fff";
-            if (res.label === "Buzz!") color = "#f1c40f";
-            else if (res.label === "Promo") color = "#88ccff";
+            main.innerText = `+¥${out.score}`;
+            sub.innerText = `${out.label} | +${out.res}`;
+            const color = (out.label === "Buzz!") ? "#f1c40f" : (out.label === "Promo") ? "#88ccff" : "#fff";
             main.style.color = color; sub.style.color = color;
         });
     }
+
+    window.onload = () => {
+        const hs = localStorage.getItem('cm_highscore_v1') || 0;
+        document.getElementById('title-hs').innerText = parseInt(hs).toLocaleString();
+    };
 </script>
 </body>
 </html>
