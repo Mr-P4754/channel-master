@@ -18,7 +18,7 @@
         .viewer-comment { position: absolute; top: -10px; background: #fff; color: #000; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8em; border: 2px solid #000; white-space: nowrap; z-index: 20;}
         
         .resource-area { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; background: #1e1e1e; padding: 6px; border-radius: 8px; margin-bottom: 5px; border: 1px solid #333; flex-shrink: 0; }
-        .res-item { font-size: 0.9em; font-weight: bold; }
+        .res-item { font-size: 0.9em; font-weight: bold; padding: 4px 0; }
         .res-rate { font-size: 0.75em; color: #ffd700; display: block; margin-top: 2px; }
 
         .item-area { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; flex-shrink: 0; }
@@ -82,7 +82,7 @@
         <div class="res-item">🔥 <span id="ui-res-red">0</span><br><span class="res-rate" id="ui-rate-red">+0.00x</span></div>
         <div class="res-item">❄️ <span id="ui-res-blue">0</span><br><span class="res-rate" id="ui-rate-blue">+0.00x</span></div>
         <div class="res-item">🍀 <span id="ui-res-green">0</span><br><span class="res-rate" id="ui-rate-green">+0.00x</span></div>
-        <div style="grid-column: span 3; border-top:1px solid #333; padding-top:4px; font-weight:900;">TOTAL MULTIPLIER: x<span id="ui-rate-total">1.00</span></div>
+        <div style="grid-column: span 3; border-top:1px solid #333; padding-top:4px; font-weight:900;">TOTAL倍率: x<span id="ui-rate-total">1.00</span></div>
     </div>
     <div class="item-area">
         <button class="btn-item" onclick="useBooster(event)">🎬 BOOST (L:<span id="ui-boost-count">3</span>)</button>
@@ -208,25 +208,29 @@
     }
 
     function updateUI() {
+        // UI数値の更新
         document.getElementById('ui-turn').innerText = turn;
         document.getElementById('ui-score').innerText = score.toLocaleString();
         document.getElementById('ui-combo').innerText = combo;
         document.getElementById('ui-level').innerText = level;
         
-        // リソース数値の更新
+        // リソース
         document.getElementById('ui-res-red').innerText = Math.floor(resources.red);
         document.getElementById('ui-res-blue').innerText = Math.floor(resources.blue);
         document.getElementById('ui-res-green').innerText = Math.floor(resources.green);
         
-        // 倍率表示の更新 (1資材 = 0.033x 換算)
-        const rR = resources.red / 30;
-        const rB = resources.blue / 30;
-        const rG = resources.green / 30;
-        document.getElementById('ui-rate-red').innerText = `+${rR.toFixed(2)}x`;
-        document.getElementById('ui-rate-blue').innerText = `+${rB.toFixed(2)}x`;
-        document.getElementById('ui-rate-green').innerText = `+${rG.toFixed(2)}x`;
-        document.getElementById('ui-rate-total').innerText = (1 + rR + rB + rG).toFixed(2);
+        // 倍率計算 (資材30個につき+1.00x)
+        const rateRed = resources.red / 30;
+        const rateBlue = resources.blue / 30;
+        const rateGreen = resources.green / 30;
         
+        // ID指定で画面を書き換える
+        document.getElementById('ui-rate-red').innerText = `+${rateRed.toFixed(2)}x`;
+        document.getElementById('ui-rate-blue').innerText = `+${rateBlue.toFixed(2)}x`;
+        document.getElementById('ui-rate-green').innerText = `+${rateGreen.toFixed(2)}x`;
+        document.getElementById('ui-rate-total').innerText = (1 + rateRed + rateBlue + rateGreen).toFixed(2);
+        
+        // アイテム
         document.getElementById('ui-boost-count').innerText = boostCount;
         document.getElementById('ui-time-count').innerText = recoverCount;
         document.getElementById('boost-fx').style.display = isBoostActive ? 'block' : 'none';
@@ -238,14 +242,17 @@
             document.getElementById('enemy-box').style.borderColor = currentEnemy.color;
         }
 
+        // ボタンのラベル
         ['red','blue','green','white','black'].forEach(t => {
-            const res = calculateOutcome(t);
+            const out = calculateOutcome(t);
             const sEl = document.getElementById(`btn-score-${t}`);
             const lEl = document.getElementById(`btn-lbl-${t}`);
-            sEl.innerText = `+¥${res.score.toLocaleString()}`;
-            lEl.innerText = `${res.label} | +${res.res}`;
-            const c = (res.label === "Buzz!") ? "#f1c40f" : (res.label === "Promo") ? "#88ccff" : "#fff";
-            sEl.style.color = c; lEl.style.color = c;
+            if (sEl && lEl) {
+                sEl.innerText = `+¥${out.score.toLocaleString()}`;
+                lEl.innerText = `${out.label} | +${out.res}`;
+                const c = (out.label === "Buzz!") ? "#f1c40f" : (out.label === "Promo") ? "#88ccff" : "#fff";
+                sEl.style.color = c; lEl.style.color = c;
+            }
         });
     }
 
@@ -259,7 +266,8 @@
 
     window.onload = () => {
         const hs = localStorage.getItem('cm_highscore_v1') || 0;
-        document.getElementById('title-hs').innerText = parseInt(hs).toLocaleString();
+        const el = document.getElementById('title-hs');
+        if (el) el.innerText = parseInt(hs).toLocaleString();
     };
 </script>
 </body>
