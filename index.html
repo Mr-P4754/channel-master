@@ -3,21 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CHANNEL MASTER | Final Release Ver.94</title>
+    <meta name="description" content="配信者になって視聴者の熱量をコントロールし、収益100万円を目指すシミュレーションゲーム『CHANNEL MASTER』。世界ランキング搭載。ブラウザで今すぐプレイ！">
+    <title>CHANNEL MASTER | 配信者育成シミュレーション</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1661799910335681" crossorigin="anonymous"></script>
 
     <style>
         /* Base Layout */
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; background-color: #000; color: #fff; padding: 0; margin: 0; user-select: none; overflow: hidden; touch-action: manipulation; display: flex; flex-direction: column; height: 100dvh; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; text-align: center; background-color: #000; color: #fff; padding: 0; margin: 0; touch-action: manipulation; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; overflow-y: auto; }
         
         /* Ad Container */
         #ad-container { width: 100%; height: 50px; background-color: #222; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #444; z-index: 1000; color: #555; font-size: 0.8em; }
 
         /* Game Container */
-        .container { width: 100%; max-width: 420px; margin: 0 auto; padding: 10px 15px; flex-grow: 1; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; background-color: #121212; }
+        .container { width: 100%; max-width: 420px; margin: 0 auto; padding: 10px 15px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; background-color: #121212; min-height: 600px; }
         
+        /* Content Section for AdSense (SEO) */
+        .content-section { max-width: 800px; margin: 20px auto; padding: 20px; text-align: left; color: #ccc; background: #111; border-top: 2px solid #333; line-height: 1.8; }
+        .content-section h1 { font-size: 1.5em; color: #ffd700; border-bottom: 1px solid #444; padding-bottom: 10px; margin-top: 30px; }
+        .content-section h2 { font-size: 1.2em; color: #fff; margin-top: 20px; border-left: 4px solid #ffd700; padding-left: 10px; }
+        .content-section p { font-size: 0.95em; margin-bottom: 15px; }
+        .content-section ul { list-style-type: disc; margin-left: 20px; color: #aaa; }
+        .content-section li { margin-bottom: 5px; }
+
         /* UI Components */
         .top-bar { display: flex; justify-content: space-between; padding: 5px 15px; background: #1e1e1e; border-radius: 8px; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid #ffd700; flex-shrink: 0; }
         .score-val { font-size: 2.5em; font-weight: 800; line-height: 1; color: #fff; text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);}
@@ -194,6 +205,28 @@
         <button class="sub-btn" onclick="backToTitle()" id="back-btn">タイトルへ</button>
     </div>
 </div>
+
+<section class="content-section">
+    <h1>CHANNEL MASTER とは？</h1>
+    <p>「CHANNEL MASTER」は、新人配信者となって視聴者の熱量をコントロールし、伝説の配信者を目指す**配信者育成シミュレーションゲーム**です。プレイヤーは限られた「配信枠（ターン数）」の中で、流れてくるコメントや視聴者の感情に合わせて最適なアクションを選び、推定収益を最大化します。</p>
+
+    <h2>ゲームの目的とストーリー</h2>
+    <p>あなたは今日から配信活動を始めるストリーマー。「推定収益100万円（ミリオン）」の壁を超えることが最初の目標です。しかし、視聴者は気まぐれです。「パッション勢」が盛り上がっている時に冷静な分析をしたり、「チル勢」がまったりしている時に過激なドッキリを仕掛けると、視聴者は離れてしまいます。</p>
+    <p>場の空気を読み、適切なタイミングで「Buzz（バズ）」や「Promo（案件）」を仕掛け、世界ランキング1位の座を奪い取ってください。</p>
+
+    <h2>攻略ガイド：高得点のコツ</h2>
+    <ul>
+        <li>**属性相性を理解する**: 敵（視聴者）のアイコン色に合わせてボタンを選びましょう。同じ色なら「Buzz（+3 Promo）」、三すくみなら「Keep（+6 Promo）」、不利なら「Promo（+9 Promo）」と効果が変わります。</li>
+        <li>**コンボを繋ぐ**: 「Buzz」や「Keep」でコンボを繋ぐと、獲得スコアに倍率がかかります。「Promo」を使うとコンボが途切れるため、使い所が重要です。</li>
+        <li>**アイテムの活用**: 「ブースト」は収益が2倍になる強力なアイテムです。コンボが最大になったタイミングで使うのがベストです。</li>
+    </ul>
+
+    <h2>アップデート情報 (Ver.96)</h2>
+    <p>世界中のプレイヤーとスコアを競える「グローバルランキング機能」を実装しました。Firebaseによるリアルタイム集計で、あなたの実力が世界に試されます。また、プレイ環境の最適化と、より戦略的なゲームバランスへの調整を行いました。</p>
+
+    <h2>プレイ環境</h2>
+    <p>本ゲームはPC、スマートフォン、タブレットのブラウザですぐに遊べる**インストール不要の無料Webゲーム**です。</p>
+</section>
 
 <script>
     /* ========== FIREBASE CONFIG ========== */
