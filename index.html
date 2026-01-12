@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CHANNEL MASTER | Final Release Ver.93</title>
+    <title>CHANNEL MASTER | Final Release Ver.94</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -269,7 +269,7 @@
     function showTab(i) { document.querySelectorAll('.tab-btn').forEach((b,idx)=>b.className=idx==i?'tab-btn active':'tab-btn'); document.querySelectorAll('.tab-content').forEach((c,idx)=>c.className=idx==i?'tab-content active':'tab-content'); }
     function openManual() { document.getElementById('manual-overlay').style.display='flex'; }
     function closeManual() { document.getElementById('manual-overlay').style.display='none'; }
-    function showPolicy() { const s = UI_STRINGS[curLang]; document.getElementById('p-title').innerText = s.policy; document.getElementById('p-content').innerText = s.pContent; document.getElementById('policy-overlay').style.display = 'flex'; }
+    function showPolicy() { const s = UI_STRINGS[curLang]; document.getElementById('p-title').innerText = s.policy; document.getElementById('p-content').innerHTML = s.pContent; document.getElementById('policy-overlay').style.display = 'flex'; }
     function closePolicy() { document.getElementById('policy-overlay').style.display = 'none'; }
 
     // --- Ranking Functions ---
