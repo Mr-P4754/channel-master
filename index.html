@@ -39,11 +39,12 @@
 
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .res-box { background: #1f1f23; padding: 20px; border-radius: 16px; border: 2px solid #ffd700; width: 90%; max-width: 380px; text-align: center; }
-        .res-grid { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; text-align: left; font-family: monospace; }
-        .res-item-row { display: flex; justify-content: space-between; font-size: 0.8em; }
+        .res-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; text-align: left; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        .res-item-row { display: flex; justify-content: space-between; font-size: 0.9em; }
         .res-divider { height: 1px; background: #444; margin: 4px 0; }
-        .res-total-val { font-size: 2.5em; font-weight: 900; color: #ffd700; text-shadow: 0 0 15px rgba(255,215,0,0.4); margin: 10px 0;}
-        .main-btn { margin-top: 10px; padding: 12px; font-size: 1.1em; font-weight: bold; background: linear-gradient(90deg, #ffd700, #e6ac00); color: #000; border: none; border-radius: 30px; width: 100%; cursor: pointer;}
+        .res-total-val { font-size: 2.8em; font-weight: 900; color: #ffd700; text-shadow: 0 0 15px rgba(255,215,0,0.4); margin: 10px 0;}
+        .main-btn { margin-top: 10px; padding: 15px; font-size: 1.2em; font-weight: bold; background: linear-gradient(90deg, #ffd700, #e6ac00); color: #000; border: none; border-radius: 10px; width: 100%; cursor: pointer;}
+        .sub-btn { margin-top: 10px; padding: 15px; font-size: 1.2em; font-weight: bold; background: #444; color: #fff; border: none; border-radius: 10px; width: 100%; cursor: pointer;}
         .boost-overlay { position: fixed; top:0; left:0; width:100%; height:100%; border: 4px solid #f1c40f; pointer-events: none; display: none; z-index: 50; }
     </style>
 </head>
@@ -101,12 +102,12 @@
 
 <div id="result-overlay" class="overlay" style="display:none;">
     <div class="res-box">
-        <div style="font-size:1.1em; font-weight:900; color:#ffd700; border-bottom:1px solid #ffd700; padding-bottom:5px; margin-bottom:15px;">配信リザルト</div>
+        <div style="font-size:1.5em; font-weight:900; color:#ffd700; border-bottom:1px solid #ffd700; padding-bottom:10px; margin-bottom:15px;">配信リザルト</div>
         <div class="res-grid" id="ui-res-grid"></div>
-        <div style="font-size:0.8em; color:#aaa;">最終収益</div>
+        <div style="font-size:0.9em; color:#aaa; margin-top:10px;">最終収益</div>
         <div class="res-total-val">¥ <span id="ui-res-final">0</span></div>
         <button class="main-btn" onclick="shareOnX()">ポストする</button>
-        <button class="main-btn" style="background:#444; color:#fff;" onclick="backToTitle()">タイトルへ</button>
+        <button class="sub-btn" onclick="backToTitle()">タイトルへ</button>
     </div>
 </div>
 
@@ -118,11 +119,11 @@
     };
 
     const ENEMY_DATA = [
-        { id: 'red', icon: '🔥', color: '#ff6b6b', name: 'Passion Fan', comment: '熱い展開頼む！' },
-        { id: 'blue', icon: '❄️', color: '#4facfe', name: 'Cool Viewer', comment: '冷静に解説して。' },
-        { id: 'green', icon: '🍀', color: '#43e97b', name: 'Chill Fan', comment: 'まったり雑談しよ。' },
-        { id: 'white', icon: '🤝', color: '#ffffff', name: 'VIP Guest', comment: 'コラボ待ってます！' },
-        { id: 'black', icon: '👾', color: '#a0a0a0', name: 'Maniac', comment: '普通の配信飽きたわ。' }
+        { id: 'red', icon: '🔥', color: '#ff6b6b', name: 'Passion Fan', comment: 'Make it hot!' },
+        { id: 'blue', icon: '❄️', color: '#4facfe', name: 'Cool Viewer', comment: 'Keep it calm.' },
+        { id: 'green', icon: '🍀', color: '#43e97b', name: 'Chill Fan', comment: 'Relaxing vibes.' },
+        { id: 'white', icon: '🤝', color: '#ffffff', name: 'VIP Guest', comment: 'Collab please!' },
+        { id: 'black', icon: '👾', color: '#a0a0a0', name: 'Maniac', comment: 'Surprise me!' }
     ];
 
     let turn, score, combo, level, resources, boostCount, recoverCount, isBoostActive, currentEnemy;
@@ -191,14 +192,14 @@
 
         const grid = document.getElementById('ui-res-grid');
         grid.innerHTML = `
-            <div class="res-item-row"><span style="color:#aaa">スパチャ総額</span><span style="color:#fff">¥ ${score.toLocaleString()}</span></div>
+            <div class="res-item-row"><span>スパチャ総額</span><span>¥ ${score.toLocaleString()}</span></div>
             <div class="res-divider"></div>
             <div class="res-item-row"><span>Passion (🔥)</span><span>${Math.floor(resources.red)} (+${pR.toFixed(2)}x)</span></div>
             <div class="res-item-row"><span>Cool    (❄️)</span><span>${Math.floor(resources.blue)} (+${pB.toFixed(2)}x)</span></div>
             <div class="res-item-row"><span>Chill   (🍀)</span><span>${Math.floor(resources.green)} (+${pG.toFixed(2)}x)</span></div>
             <div class="res-divider"></div>
-            <div class="res-item-row"><span style="color:#aaa">最終倍率</span><span style="color:#ffd700">x ${totalM.toFixed(2)}</span></div>
-            <div class="res-item-row"><span style="color:#aaa">獲得案件ボーナス</span><span style="color:#ffd700">+ ¥ ${(final - score).toLocaleString()}</span></div>
+            <div class="res-item-row"><span style="color:#ffd700">最終倍率</span><span style="color:#ffd700">x ${totalM.toFixed(2)}</span></div>
+            <div class="res-item-row"><span style="color:#ffd700">獲得案件ボーナス</span><span style="color:#ffd700">+ ¥ ${(final - score).toLocaleString()}</span></div>
         `;
 
         document.getElementById('ui-res-final').innerText = final.toLocaleString();
@@ -217,13 +218,14 @@
         document.getElementById('ui-res-blue').innerText = Math.floor(resources.blue);
         document.getElementById('ui-res-green').innerText = Math.floor(resources.green);
         
-        const rR = resources.red / 30;
-        const rB = resources.blue / 30;
-        const rG = resources.green / 30;
-        document.getElementById('ui-rate-red').innerText = `+${rR.toFixed(2)}x`;
-        document.getElementById('ui-rate-blue').innerText = `+${rB.toFixed(2)}x`;
-        document.getElementById('ui-rate-green').innerText = `+${rG.toFixed(2)}x`;
-        document.getElementById('ui-rate-total').innerText = (1 + rR + rB + rG).toFixed(2);
+        const rateRed = resources.red / 30;
+        const rateBlue = resources.blue / 30;
+        const rateGreen = resources.green / 30;
+        
+        document.getElementById('ui-rate-red').innerText = `+${rateRed.toFixed(2)}x`;
+        document.getElementById('ui-rate-blue').innerText = `+${rateBlue.toFixed(2)}x`;
+        document.getElementById('ui-rate-green').innerText = `+${rateGreen.toFixed(2)}x`;
+        document.getElementById('ui-rate-total').innerText = (1 + rateRed + rateBlue + rateGreen).toFixed(2);
         
         document.getElementById('ui-boost-count').innerText = boostCount;
         document.getElementById('ui-time-count').innerText = recoverCount;
@@ -237,13 +239,15 @@
         }
 
         ['red','blue','green','white','black'].forEach(t => {
-            const res = calculateOutcome(t);
+            const out = calculateOutcome(t);
             const sEl = document.getElementById(`btn-score-${t}`);
             const lEl = document.getElementById(`btn-lbl-${t}`);
-            sEl.innerText = `+¥${res.score.toLocaleString()}`;
-            lEl.innerText = `${res.label} | +${res.res}`;
-            const c = (res.label === "Buzz!") ? "#f1c40f" : (res.label === "Promo") ? "#88ccff" : "#fff";
-            sEl.style.color = c; lEl.style.color = c;
+            if (sEl && lEl) {
+                sEl.innerText = `+¥${out.score.toLocaleString()}`;
+                lEl.innerText = `${out.label} | +${out.res}`;
+                const c = (out.label === "Buzz!") ? "#f1c40f" : (out.label === "Promo") ? "#88ccff" : "#fff";
+                sEl.style.color = c; lEl.style.color = c;
+            }
         });
     }
 
@@ -252,7 +256,7 @@
     function backToTitle() { location.reload(); }
     function shareOnX() {
         const f = document.getElementById('ui-res-final').innerText;
-        window.open(`https://twitter.com/intent/tweet?text=CHANNEL MASTERで ¥${f} の収益を上げました！&url=${encodeURIComponent(window.location.href)}`, '_blank');
+        window.open(`https://twitter.com/intent/tweet?text=CHANNEL MASTERで最終収益 ¥${f} を達成！&url=${encodeURIComponent(window.location.href)}`, '_blank');
     }
 
     window.onload = () => {
