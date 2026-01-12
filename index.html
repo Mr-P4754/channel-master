@@ -12,15 +12,16 @@
         #ad-container { width: 100%; height: 50px; background-color: #222; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #444; z-index: 1000; }
         .container { width: 100%; max-width: 420px; margin: 0 auto; padding: 10px 15px; flex-grow: 1; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; background-color: #121212; }
         
+        /* UI Components */
         .top-bar { display: flex; justify-content: space-between; padding: 5px 15px; background: #1e1e1e; border-radius: 8px; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid #ffd700; flex-shrink: 0; }
         .score-val { font-size: 2.5em; font-weight: 800; line-height: 1; color: #fff; text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);}
         .enemy-container { position: relative; width: 100%; margin: 0 auto 5px; background: #252525; border-radius: 12px; padding: 10px 0; border: 2px solid #555; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100px; flex-shrink: 0; }
-        .viewer-comment { position: absolute; top: -10px; background: #fff; color: #000; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8em; border: 2px solid #000; }
+        .viewer-comment { position: absolute; top: -10px; background: #fff; color: #000; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8em; border: 2px solid #000; white-space: nowrap;}
         .resource-area { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; background: #1e1e1e; padding: 6px; border-radius: 8px; margin-bottom: 5px; border: 1px solid #333; flex-shrink: 0; }
         .item-area { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; flex-shrink: 0; }
         .btn-item { padding: 8px; border: none; border-radius: 8px; font-weight: bold; color: white; background: #2f2f35; border-bottom: 3px solid #1a1a1d; font-size: 0.8em;}
-        .btn-item:disabled { opacity: 0.3; }
-
+        
+        /* 操作パネル */
         .control-panel { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; height: 85px; flex-shrink: 0;}
         .special-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; height: 85px; flex-shrink: 0;}
         .btn-action { height: 100%; border: none; border-radius: 12px; color: white; cursor: pointer; position: relative; box-shadow: 0 6px 0 rgba(0,0,0,0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: all 0.05s; overflow: hidden; }
@@ -34,18 +35,18 @@
         .bg-white { background: linear-gradient(135deg, #f8f9fa, #dee2e6); color: #333; }
         .bg-black { background: linear-gradient(135deg, #9b5de5, #5a189a); }
 
-        /* リザルト画面の詳細設定 */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .res-box { background: #1f1f23; padding: 20px; border-radius: 16px; border: 2px solid #ffd700; width: 90%; max-width: 380px; text-align: center; }
+        /* リザルト画面の再構築 */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow-y: auto;}
+        .res-box { background: #1f1f23; padding: 20px; border-radius: 16px; border: 2px solid #ffd700; width: 90%; max-width: 380px; text-align: center; margin: 20px 0;}
         .res-title { font-size: 1.2em; font-weight: 900; color: #ffd700; margin-bottom: 15px; border-bottom: 1px solid #ffd700; padding-bottom: 5px;}
-        .res-grid { display: flex; flex-direction: column; gap: 4px; margin-bottom: 15px; text-align: left; font-family: monospace; }
-        .res-item { display: flex; justify-content: space-between; font-size: 0.85em; }
+        .res-grid { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; text-align: left; font-family: monospace; }
+        .res-item { display: flex; justify-content: space-between; font-size: 0.8em; }
         .res-label { color: #aaa; }
         .res-val { color: #fff; font-weight: bold; }
-        .res-divider { height: 1px; background: #444; margin: 5px 0; }
-        .res-total-val { font-size: 2.2em; font-weight: 900; color: #ffd700; text-shadow: 0 0 15px rgba(255,215,0,0.4); }
+        .res-divider { height: 1px; background: #444; margin: 4px 0; }
+        .res-total-val { font-size: 2.5em; font-weight: 900; color: #ffd700; text-shadow: 0 0 15px rgba(255,215,0,0.4); margin: 10px 0;}
         
-        .main-btn { margin-top: 15px; padding: 12px; font-size: 1.1em; font-weight: bold; background: linear-gradient(90deg, #ffd700, #e6ac00); color: #000; border: none; border-radius: 30px; width: 100%; cursor: pointer;}
+        .main-btn { margin-top: 10px; padding: 12px; font-size: 1.1em; font-weight: bold; background: linear-gradient(90deg, #ffd700, #e6ac00); color: #000; border: none; border-radius: 30px; width: 100%; cursor: pointer;}
         .boost-overlay { position: fixed; top:0; left:0; width:100%; height:100%; border: 4px solid #f1c40f; pointer-events: none; display: none; z-index: 50; }
     </style>
 </head>
@@ -89,29 +90,21 @@
         <button class="btn-item" onclick="useRecover(event)" id="btn-recover">⏰ TIME (<span id="time-count">3</span>)</button>
     </div>
     <div class="control-panel">
-        <button class="btn-action bg-red" onclick="battle('red', event)">🔥<span class="btn-main-text" id="main-red"></span><span class="btn-sub-text" id="sub-red"></span></button>
-        <button class="btn-action bg-blue" onclick="battle('blue', event)">❄️<span class="btn-main-text" id="main-blue"></span><span class="btn-sub-text" id="sub-blue"></span></button>
-        <button class="btn-action bg-green" onclick="battle('green', event)">🍀<span class="btn-main-text" id="main-green"></span><span class="btn-sub-text" id="sub-green"></span></button>
+        <button class="btn-action bg-red" onclick="battle('red')">🔥<span class="btn-main-text" id="main-red"></span><span class="btn-sub-text" id="sub-red"></span></button>
+        <button class="btn-action bg-blue" onclick="battle('blue')">❄️<span class="btn-main-text" id="main-blue"></span><span class="btn-sub-text" id="sub-blue"></span></button>
+        <button class="btn-action bg-green" onclick="battle('green')">🍀<span class="btn-main-text" id="main-green"></span><span class="btn-sub-text" id="sub-green"></span></button>
     </div>
     <div class="special-row">
-        <button class="btn-action bg-white" onclick="battle('white', event)">🤝 COLLAB<span class="btn-main-text" id="main-white"></span><span class="btn-sub-text" id="sub-white"></span></button>
-        <button class="btn-action bg-black" onclick="battle('black', event)">👻 PRANK<span class="btn-main-text" id="main-black"></span><span class="btn-sub-text" id="sub-black"></span></button>
+        <button class="btn-action bg-white" onclick="battle('white')">🤝 COLLAB<span class="btn-main-text" id="main-white"></span><span class="btn-sub-text" id="sub-white"></span></button>
+        <button class="btn-action bg-black" onclick="battle('black')">👻 PRANK<span class="btn-main-text" id="main-black"></span><span class="btn-sub-text" id="sub-black"></span></button>
     </div>
 </div>
 
 <div id="result-overlay" class="overlay" style="display:none;">
     <div class="res-box">
         <div class="res-title">STREAM RESULT</div>
-        <div class="res-grid">
-            <div class="res-item"><span class="res-label">Base Revenue</span><span class="res-val">¥ <span id="r-base">0</span></span></div>
-            <div class="res-divider"></div>
-            <div class="res-item"><span class="res-label">Passion (🔥)</span><span class="res-val"><span id="r-red-v">0</span> (+<span id="r-red-p">0</span>%)</span></div>
-            <div class="res-item"><span class="res-label">Cool    (❄️)</span><span class="res-val"><span id="r-blue-v">0</span> (+<span id="r-blue-p">0</span>%)</span></div>
-            <div class="res-item"><span class="res-label">Chill   (🍀)</span><span class="res-val"><span id="r-green-v">0</span> (+<span id="r-green-p">0</span>%)</span></div>
-            <div class="res-divider"></div>
-            <div class="res-item"><span class="res-label">Total Multiplier</span><span class="res-val">x <span id="r-total-m">1.00</span></span></div>
-            <div class="res-item"><span class="res-label">Bonus Amount</span><span class="res-val">+ ¥ <span id="r-bonus-a">0</span></span></div>
-        </div>
+        <div class="res-grid" id="res-detail-grid">
+            </div>
         <div style="font-size:0.8em; color:#aaa; margin-bottom:5px;">TOTAL REVENUE</div>
         <div class="res-total-val">¥ <span id="r-final">0</span></div>
         <div id="new-record-msg" style="color:#f1c40f; font-weight:bold; display:none; margin-top:10px;">★ NEW RECORD ★</div>
@@ -128,11 +121,11 @@
     };
 
     const TYPES = [
-        { id: 'red', icon: '🔥', color: '#ff6b6b' },
-        { id: 'blue', icon: '❄️', color: '#4facfe' },
-        { id: 'green', icon: '🍀', color: '#43e97b' },
-        { id: 'white', icon: '🤝', color: '#ffffff' },
-        { id: 'black', icon: '👾', color: '#a0a0a0' }
+        { id: 'red', icon: '🔥', color: '#ff6b6b', name: 'Passion' },
+        { id: 'blue', icon: '❄️', color: '#4facfe', name: 'Cool' },
+        { id: 'green', icon: '🍀', color: '#43e97b', name: 'Chill' },
+        { id: 'white', icon: '🤝', color: '#ffffff', name: 'VIP' },
+        { id: 'black', icon: '👾', color: '#a0a0a0', name: 'Maniac' }
     ];
 
     let turn, score, combo, level, resources, boostCount, recoverCount, isBoostActive, currentEnemy, highScore = 0;
@@ -151,30 +144,33 @@
         updateUI();
     }
 
+    function getMatchup(p, e) {
+        if (e === 'white') return (p === 'white') ? 'advantage' : 'extract';
+        if (e === 'black') return (p === 'black') ? 'advantage' : 'extract';
+        if (p === 'white' || p === 'black') return 'extract';
+        if (p === e) return 'advantage';
+        if ((e === 'red' && p === 'blue') || (e === 'blue' && p === 'green') || (e === 'green' && p === 'red')) return 'neutral';
+        return 'extract';
+    }
+
     function calculateOutcome(pType) {
         if (!currentEnemy) return { score:0, res:0, label:"", type:"" };
-        const eType = currentEnemy.id;
-        let match = 'extract';
-        if (eType === 'white' || eType === 'black') { match = (pType === eType) ? 'advantage' : 'extract'; }
-        else if (pType === 'white' || pType === 'black') { match = 'extract'; }
-        else if (pType === eType) { match = 'advantage'; }
-        else if ((eType === 'red' && pType === 'blue') || (eType === 'blue' && pType === 'green') || (eType === 'green' && pType === 'red')) { match = 'neutral'; }
-
-        const base = 100 * (1 + (level * 0.1));
+        const match = getMatchup(pType, currentEnemy.id);
+        const base = 100 * (1 + (level * 0.05)); // スコア増加率を抑制
         let s = 0, r = 0, lbl = "";
 
         if (match === 'advantage') { s = Math.floor(base * (1 + (combo * 0.2))); r = 3; lbl = "Buzz!"; }
         else if (match === 'neutral') { s = Math.floor(base * 0.6 * (1 + (combo * 0.1))); r = 6; lbl = "Keep"; }
-        else { s = Math.floor(base * 0.2); r = (pType === 'white' || pType === 'black') ? 12 : 9; lbl = "Promo"; }
+        else { s = Math.floor(base * 0.2); r = (pType==='white'||pType==='black') ? 12 : 9; lbl = "Promo"; }
         
         if (isBoostActive) s *= 2;
         return { score: s, res: r, label: lbl, type: match };
     }
 
-    function battle(pType, e) {
+    function battle(pType) {
         if (turn <= 0) return;
         const out = calculateOutcome(pType);
-        if (out.type !== 'extract') combo++; else combo = 0;
+        if (out.type === 'advantage' || out.type === 'neutral') combo++; else combo = 0;
         
         if (pType === 'white' || pType === 'black') {
             resources.red += out.res/3; resources.blue += out.res/3; resources.green += out.res/3;
@@ -182,9 +178,9 @@
 
         score += out.score; turn--; level++;
         if (out.type === 'advantage') Vibrate.short(); else if (out.type === 'neutral') Vibrate.medium();
-
-        if (out.type === 'advantage' && Math.random() < 0.1) recoverCount++;
-        if (out.type === 'extract' && Math.random() < 0.1) boostCount++;
+        
+        if (out.type === 'advantage' && Math.random() < 0.1 && recoverCount < 5) recoverCount++;
+        if (out.type === 'extract' && Math.random() < 0.1 && boostCount < 5) boostCount++;
 
         isBoostActive = false;
         spawnEnemy(); if (turn <= 0) showResult();
@@ -196,20 +192,21 @@
         const pG = resources.green / 30;
         const totalM = 1 + pR + pB + pG;
         const final = Math.floor(score * totalM);
-        const bonusA = final - score;
+        const bonusVal = final - score;
 
-        // 詳細データの流し込み
-        document.getElementById('r-base').innerText = score.toLocaleString();
-        document.getElementById('r-red-v').innerText = Math.floor(resources.red);
-        document.getElementById('r-red-p').innerText = (pR * 100).toFixed(0);
-        document.getElementById('r-blue-v').innerText = Math.floor(resources.blue);
-        document.getElementById('r-blue-p').innerText = (pB * 100).toFixed(0);
-        document.getElementById('r-green-v').innerText = Math.floor(resources.green);
-        document.getElementById('r-green-p').innerText = (pG * 100).toFixed(0);
-        document.getElementById('r-total-m').innerText = totalM.toFixed(2);
-        document.getElementById('r-bonus-a').innerText = bonusA.toLocaleString();
+        const grid = document.getElementById('res-detail-grid');
+        grid.innerHTML = `
+            <div class="res-item"><span class="res-label">Base Revenue</span><span class="res-val">¥ ${score.toLocaleString()}</span></div>
+            <div class="res-divider"></div>
+            <div class="res-item"><span class="res-label">Passion (🔥)</span><span class="res-val">${Math.floor(resources.red)} (+${(pR*100).toFixed(0)}%)</span></div>
+            <div class="res-item"><span class="res-label">Cool    (❄️)</span><span class="res-val">${Math.floor(resources.blue)} (+${(pB*100).toFixed(0)}%)</span></div>
+            <div class="res-item"><span class="res-label">Chill   (🍀)</span><span class="res-val">${Math.floor(resources.green)} (+${(pG*100).toFixed(0)}%)</span></div>
+            <div class="res-divider"></div>
+            <div class="res-item"><span class="res-label">Total Multiplier</span><span class="res-val">x ${totalM.toFixed(2)}</span></div>
+            <div class="res-item"><span class="res-label">Bonus Amount</span><span class="res-val">+ ¥ ${bonusVal.toLocaleString()}</span></div>
+        `;
+
         document.getElementById('r-final').innerText = final.toLocaleString();
-
         document.getElementById('result-overlay').style.display = 'flex';
         if (final > highScore) {
             localStorage.setItem('cm_highscore_v1', final);
@@ -217,8 +214,8 @@
         }
     }
 
-    function useBooster() { if(boostCount > 0 && !isBoostActive) { boostCount--; isBoostActive = true; Vibrate.long(); updateUI(); } }
-    function useRecover() { if(recoverCount > 0) { recoverCount--; turn++; Vibrate.long(); updateUI(); } }
+    function useBooster() { if(boostCount>0 && !isBoostActive) { boostCount--; isBoostActive=true; Vibrate.long(); updateUI(); } }
+    function useRecover() { if(recoverCount>0) { recoverCount--; turn++; Vibrate.long(); updateUI(); } }
     function backToTitle() { location.reload(); }
     function shareOnX() {
         const final = document.getElementById('r-final').innerText;
@@ -229,10 +226,12 @@
         document.getElementById('turn').innerText = turn;
         document.getElementById('score').innerText = score.toLocaleString();
         document.getElementById('combo').innerText = combo;
-        document.getElementById('level').innerText = level;
         document.getElementById('res-red-val').innerText = Math.floor(resources.red);
         document.getElementById('res-blue-val').innerText = Math.floor(resources.blue);
         document.getElementById('res-green-val').innerText = Math.floor(resources.green);
+        document.getElementById('level').innerText = level;
+        
+        const m = 1 + (resources.red + resources.blue + resources.green) / 30;
         document.getElementById('rate-red').innerText = `+${((resources.red/30)*100).toFixed(0)}%`;
         document.getElementById('rate-blue').innerText = `+${((resources.blue/30)*100).toFixed(0)}%`;
         document.getElementById('rate-green').innerText = `+${((resources.green/30)*100).toFixed(0)}%`;
@@ -242,17 +241,22 @@
 
         if (currentEnemy) {
             document.getElementById('enemy-icon').innerText = currentEnemy.icon;
+            document.getElementById('enemy-name').innerText = currentEnemy.name;
             document.getElementById('enemy-box').style.borderColor = currentEnemy.color;
+            document.getElementById('viewer-comment').innerText = "Streaming now...";
         }
 
         ['red','blue','green','white','black'].forEach(t => {
-            const out = calculateOutcome(t);
+            const res = calculateOutcome(t);
             const main = document.getElementById(`main-${t}`);
             const sub = document.getElementById(`sub-${t}`);
-            main.innerText = `+¥${out.score}`;
-            sub.innerText = `${out.label} | +${out.res}`;
-            const c = (out.label === "Buzz!") ? "#f1c40f" : (out.label === "Keep") ? "#fff" : "#88ccff";
-            main.style.color = c; sub.style.color = c;
+            main.innerText = `+¥${res.score}`;
+            sub.innerText = `${res.label} | +${res.res}`;
+
+            let color = "#fff";
+            if (res.label === "Buzz!") color = "#f1c40f";
+            else if (res.label === "Promo") color = "#88ccff";
+            main.style.color = color; sub.style.color = color;
         });
     }
 
