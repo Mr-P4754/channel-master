@@ -22,14 +22,15 @@
         .res-rate { font-size: 0.75em; color: #ffd700; display: block; margin-top: 2px; }
 
         .item-area { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; flex-shrink: 0; }
-        .btn-item { padding: 8px; border: none; border-radius: 8px; font-weight: bold; color: white; background: #2f2f35; border-bottom: 3px solid #1a1a1d; font-size: 0.85em;}
-        .btn-item:active { transform: translateY(2px); border-bottom: 1px solid #1a1a1d; }
+        .btn-item { padding: 8px; border: none; border-radius: 8px; font-weight: bold; color: white; background: #2f2f35; border-bottom: 3px solid #1a1a1d; font-size: 0.85em; transition: all 0.1s;}
+        .btn-item.active { background: linear-gradient(135deg, #5e4c00, #332a00); border: 2px solid #f1c40f; transform: translateY(2px); box-shadow: 0 0 10px rgba(241, 196, 15, 0.3); }
         .btn-item:disabled { opacity: 0.3; pointer-events: none; }
         
         .control-panel { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; height: 85px; flex-shrink: 0;}
         .special-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; height: 85px; flex-shrink: 0;}
         .btn-action { height: 100%; border: none; border-radius: 12px; color: white; cursor: pointer; position: relative; box-shadow: 0 6px 0 rgba(0,0,0,0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: all 0.05s; overflow: hidden; }
         .btn-action:active { transform: translateY(6px); box-shadow: none; margin-bottom: 6px; }
+        
         .btn-main-text { font-size: 11px; font-weight: 900; margin-bottom: 2px; }
         .btn-sub-text { font-size: 9px; font-weight: 900; background: rgba(0,0,0,0.7); padding: 2px 6px; border-radius: 10px; min-width: 80%; }
 
@@ -47,8 +48,20 @@
         .res-total-val { font-size: 2.8em; font-weight: 900; color: #ffd700; text-shadow: 0 0 15px rgba(255,215,0,0.4); margin: 10px 0;}
         .main-btn { margin-top: 10px; padding: 15px; font-size: 1.2em; font-weight: bold; background: linear-gradient(90deg, #ffd700, #e6ac00); color: #000; border: none; border-radius: 10px; width: 100%; cursor: pointer;}
         .sub-btn { margin-top: 10px; padding: 15px; font-size: 1.2em; font-weight: bold; background: #444; color: #fff; border: none; border-radius: 10px; width: 100%; cursor: pointer;}
-        .boost-overlay { position: fixed; top:0; left:0; width:100%; height:100%; border: 4px solid #f1c40f; pointer-events: none; display: none; z-index: 50; }
         
+        /* 演出用スタイル */
+        .flash-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 80; opacity: 0; }
+        .flash-anim { animation: screenFlash 0.3s ease-out; }
+        @keyframes screenFlash { 0% { background-color: rgba(255, 255, 255, 0.9); opacity: 1; } 100% { background-color: transparent; opacity: 0; } }
+        .boost-overlay { position: fixed; top:0; left:0; width:100%; height:100%; border: 4px solid #f1c40f; pointer-events: none; display: none; z-index: 50; box-shadow: inset 0 0 50px rgba(241, 196, 15, 0.4); animation: pulseBorder 0.8s infinite; }
+        @keyframes pulseBorder { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        .particle { position: fixed; width: 8px; height: 8px; border-radius: 50%; pointer-events: none; z-index: 90; }
+        .cutin-text { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 4em; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(255,215,0,0.8), 4px 4px 0px #000; z-index: 95; pointer-events: none; white-space: nowrap; animation: cutIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes cutIn { 0% { transform: translate(-50%, -50%) scale(0) rotate(-15deg); opacity: 0; } 50% { transform: translate(-50%, -50%) scale(1.3) rotate(0deg); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; } }
+        .shake-small { animation: shake 0.15s; }
+        .shake-big { animation: shake 0.4s; }
+        @keyframes shake { 0% { transform: translate(2px, 2px); } 25% { transform: translate(-2px, -2px); } 50% { transform: translate(2px, -2px); } 75% { transform: translate(-2px, 2px); } 100% { transform: translate(0, 0); } }
+
         .lang-btn { flex: 1; padding: 10px; border-radius: 8px; background: #222; color: #888; border: 2px solid #444; font-weight: bold; }
         .lang-btn.active { color: #fff; border-color: #ffd700; background: #333; }
     </style>
@@ -56,6 +69,7 @@
 <body>
 
 <div id="ad-container"><div class="ad-placeholder">[ AD SPACE ]</div></div>
+<div id="flash-fx" class="flash-overlay"></div>
 <div id="boost-fx" class="boost-overlay"></div>
 
 <div id="title-screen" class="overlay">
@@ -144,7 +158,19 @@
         en: {
             best: "PERSONAL BEST", start: "START STREAM", turn: "Turns Left", score: "EST. REVENUE", totalM: "TOTAL MULTIPLIER", boost: "🎬 BOOST", time: "⏰ TIME", 
             collab: "🤝 COLLAB", prank: "👻 PRANK", resTitle: "STREAM RESULT", resBase: "Base SuperChat", resFinal: "TOTAL REVENUE", resShare: "Share Result", resBack: "Title Screen",
-            resBonus: "Sponsorship Bonus", buzz: "Buzz!", promo: "Promo", keep: "Keep"
+            resBonus: "獲得案件ボーナス", buzz: "Buzz!", promo: "Promo", keep: "Keep"
+        }
+    };
+
+    const Sound = {
+        ctx: null,
+        init: function() { try { window.AudioContext = window.AudioContext || window.webkitAudioContext; this.ctx = new AudioContext(); } catch(e){} },
+        playTone: function(f, d, v=0.1) {
+            if (!this.ctx) return;
+            const o = this.ctx.createOscillator(); const g = this.ctx.createGain();
+            o.frequency.setValueAtTime(f, this.ctx.currentTime); g.gain.setValueAtTime(v, this.ctx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + d);
+            o.connect(g); g.connect(this.ctx.destination); o.start(); o.stop(this.ctx.currentTime + d);
         }
     };
 
@@ -176,6 +202,7 @@
     }
 
     function startGame() {
+        Sound.init();
         document.getElementById('title-screen').style.display = 'none';
         turn = 30; score = 0; combo = 0; level = 1; resources = { red:0, blue:0, green:0 };
         boostCount = 3; recoverCount = 3; isBoostActive = false;
@@ -215,9 +242,13 @@
             resources.red += out.res/3; resources.blue += out.res/3; resources.green += out.res/3;
         } else resources[pType] += out.res;
         score += out.score; turn--; level++;
-        if (out.type === 'advantage') Vibrate.short(); else if (out.type === 'neutral') Vibrate.medium();
+        
+        if (out.type === 'advantage') { Vibrate.short(); Sound.playTone(880, 0.1); shakeScreen('small'); } 
+        else if (out.type === 'neutral') { Vibrate.medium(); Sound.playTone(440, 0.1); }
+        
         if (out.type === 'advantage' && Math.random() < 0.1 && recoverCount < 5) recoverCount++;
         if (out.type === 'extract' && Math.random() < 0.1 && boostCount < 5) boostCount++;
+        
         isBoostActive = false;
         spawnEnemy();
         if (turn <= 0) showResult(); else updateUI();
@@ -263,8 +294,14 @@
         document.getElementById('ui-rate-green').innerText = `+${rG.toFixed(2)}x`;
         document.getElementById('ui-rate-total').innerText = (1 + rR + rB + rG).toFixed(2);
         
-        document.getElementById('ui-btn-boost-label').innerText = `${t.boost} (L:${boostCount})`;
+        const btnBoost = document.getElementById('ui-btn-boost-label');
+        btnBoost.innerText = `${t.boost} (L:${boostCount})`;
+        btnBoost.className = 'btn-item' + (isBoostActive ? ' active' : '');
+        btnBoost.disabled = (boostCount <= 0 && !isBoostActive);
+
         document.getElementById('ui-btn-time-label').innerText = `${t.time} (L:${recoverCount})`;
+        document.getElementById('ui-btn-time-label').disabled = (recoverCount <= 0);
+        
         document.getElementById('boost-fx').style.display = isBoostActive ? 'block' : 'none';
 
         if (currentEnemy) {
@@ -284,9 +321,78 @@
         });
     }
 
-    function useBooster(e) { if(boostCount > 0 && !isBoostActive) { boostCount--; isBoostActive = true; Vibrate.long(); updateUI(); } }
-    function useRecover(e) { if(recoverCount > 0) { recoverCount--; turn++; Vibrate.long(); updateUI(); } }
-    function backToTitle() { document.getElementById('result-overlay').style.display = 'none'; document.getElementById('title-screen').style.display = 'flex'; window.onload(); }
+    function useBooster(e) {
+        if (isBoostActive) {
+            // キャンセル機能
+            isBoostActive = false;
+            boostCount++;
+            Sound.playTone(220, 0.2);
+        } else if (boostCount > 0) {
+            // 使用
+            boostCount--;
+            isBoostActive = true;
+            Vibrate.long();
+            Sound.playTone(880, 0.4);
+            createParticles(e.clientX, e.clientY, '#f1c40f');
+            flashScreen('#fff');
+            spawnCutIn("BOOST!!");
+            shakeScreen('big');
+        }
+        updateUI();
+    }
+
+    function useRecover(e) {
+        if (recoverCount > 0) {
+            recoverCount--;
+            turn++;
+            Vibrate.long();
+            Sound.playTone(1046, 0.3);
+            createParticles(e.clientX, e.clientY, '#88ccff');
+            flashScreen('#88ccff');
+            spawnCutIn("EXTEND!");
+            updateUI();
+        }
+    }
+
+    // 演出用関数群
+    function flashScreen(color) {
+        const f = document.getElementById('flash-fx');
+        f.style.backgroundColor = color;
+        f.classList.remove('flash-anim'); void f.offsetWidth; f.classList.add('flash-anim');
+    }
+    function spawnCutIn(text) {
+        const el = document.createElement('div');
+        el.className = 'cutin-text'; el.innerText = text;
+        document.body.appendChild(el); setTimeout(() => el.remove(), 600);
+    }
+    function shakeScreen(type) {
+        const c = document.getElementById('main-container');
+        c.classList.remove('shake-small', 'shake-big');
+        void c.offsetWidth; c.classList.add(type === 'big' ? 'shake-big' : 'shake-small');
+    }
+    function createParticles(x, y, color) {
+        for(let i=0; i<15; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle'; p.style.backgroundColor = color;
+            p.style.left = x + 'px'; p.style.top = y + 'px';
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 50 + Math.random() * 100;
+            const tx = Math.cos(angle) * dist;
+            const ty = Math.sin(angle) * dist;
+            p.animate([
+                { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+            ], { duration: 600, easing: 'ease-out' });
+            document.body.appendChild(p); setTimeout(() => p.remove(), 600);
+        }
+    }
+
+    function backToTitle() {
+        document.getElementById('result-overlay').style.display = 'none';
+        document.getElementById('title-screen').style.display = 'flex';
+        window.onload();
+    }
+
     function shareOnX() {
         const f = document.getElementById('ui-res-final').innerText;
         window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(UI_TEXT[curLang].share.replace("{score}", f))}&url=${encodeURIComponent(window.location.href)}`, '_blank');
