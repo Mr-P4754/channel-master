@@ -12,7 +12,6 @@
         #ad-container { width: 100%; height: 50px; background-color: #222; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #444; z-index: 1000; }
         .container { width: 100%; max-width: 420px; margin: 0 auto; padding: 10px 15px; flex-grow: 1; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; background-color: #121212; }
         
-        /* UI Components */
         .top-bar { display: flex; justify-content: space-between; padding: 5px 15px; background: #1e1e1e; border-radius: 8px; font-weight: bold; margin-bottom: 5px; border-bottom: 2px solid #ffd700; flex-shrink: 0; }
         .score-val { font-size: 2.5em; font-weight: 800; line-height: 1; color: #fff; text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);}
         .enemy-container { position: relative; width: 100%; margin: 0 auto 5px; background: #252525; border-radius: 12px; padding: 10px 0; border: 2px solid #555; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100px; flex-shrink: 0; }
@@ -21,11 +20,11 @@
         .item-area { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; flex-shrink: 0; }
         .btn-item { padding: 8px; border: none; border-radius: 8px; font-weight: bold; color: white; background: #2f2f35; border-bottom: 3px solid #1a1a1d; font-size: 0.85em;}
         
-        /* 操作パネル */
         .control-panel { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; height: 85px; flex-shrink: 0;}
         .special-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; height: 85px; flex-shrink: 0;}
         .btn-action { height: 100%; border: none; border-radius: 12px; color: white; cursor: pointer; position: relative; box-shadow: 0 6px 0 rgba(0,0,0,0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; transition: all 0.05s; overflow: hidden; }
         .btn-action:active { transform: translateY(6px); box-shadow: none; margin-bottom: 6px; }
+        
         .btn-main-text { font-size: 11px; font-weight: 900; margin-bottom: 2px; }
         .btn-sub-text { font-size: 9px; font-weight: 900; background: rgba(0,0,0,0.7); padding: 2px 6px; border-radius: 10px; min-width: 80%; }
 
@@ -35,7 +34,6 @@
         .bg-white { background: linear-gradient(135deg, #f8f9fa, #dee2e6); color: #333; }
         .bg-black { background: linear-gradient(135deg, #9b5de5, #5a189a); }
 
-        /* リザルト画面の詳細表示 */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .res-box { background: #1f1f23; padding: 20px; border-radius: 16px; border: 2px solid #ffd700; width: 90%; max-width: 380px; text-align: center; }
         .res-grid { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; text-align: left; font-family: monospace; }
@@ -125,29 +123,63 @@
         { id: 'black', icon: '👾', color: '#a0a0a0', name: 'Maniac', comment: 'Surprise me!' }
     ];
 
-    let turn, score, combo, level, resources, boostCount, recoverCount, isBoostActive, currentEnemy;
+    let turn=30, score=0, combo=0, level=1, resources={red:0,blue:0,green:0}, boostCount=3, recoverCount=3, isBoostActive=false, currentEnemy=ENEMY_DATA[0];
 
-    // 開始時に確実にUIを同期させる
     function startGame() {
         document.getElementById('title-screen').style.display = 'none';
         turn = 30; score = 0; combo = 0; level = 1; resources = { red:0, blue:0, green:0 };
         boostCount = 3; recoverCount = 3; isBoostActive = false;
-        
         spawnEnemy();
-        updateUI(); // ここで最初の表示を確定
+        updateUI(); 
     }
 
     function spawnEnemy() {
         currentEnemy = ENEMY_DATA[Math.floor(Math.random() * ENEMY_DATA.length)];
     }
 
-    function getMatchup(p, e) {
-        if (e === 'white') return (p === 'white') ? 'advantage' : 'extract';
-        if (e === 'black') return (p === 'black') ? 'advantage' : 'extract';
-        if (p === 'white' || p === 'black') return 'extract';
-        if (p === e) return 'advantage';
-        if ((e === 'red' && p === 'blue') || (e === 'blue' && p === 'green') || (e === 'green' && p === 'red')) return 'neutral';
-        return 'extract';
+    function updateUI() {
+        // IDが存在するか確認しながら、強制的に流し込む
+        const els = {
+            'ui-turn': turn,
+            'ui-score': score.toLocaleString(),
+            'ui-combo': combo,
+            'ui-level': level,
+            'ui-res-red': Math.floor(resources.red),
+            'ui-res-blue': Math.floor(resources.blue),
+            'ui-res-green': Math.floor(resources.green),
+            'ui-rate-red': `+${((resources.red/30)*100).toFixed(0)}%`,
+            'ui-rate-blue': `+${((resources.blue/30)*100).toFixed(0)}%`,
+            'ui-rate-green': `+${((resources.green/30)*100).toFixed(0)}%`,
+            'ui-boost-count': boostCount,
+            'ui-time-count': recoverCount,
+            'ui-enemy-icon': currentEnemy.icon,
+            'ui-enemy-name': currentEnemy.name,
+            'ui-comment': currentEnemy.comment
+        };
+
+        for (const [id, val] of Object.entries(els)) {
+            const el = document.getElementById(id);
+            if (el) el.innerText = val;
+        }
+
+        const enemyBox = document.getElementById('enemy-box');
+        if (enemyBox) enemyBox.style.borderColor = currentEnemy.color;
+        
+        const boostFx = document.getElementById('boost-fx');
+        if (boostFx) boostFx.style.display = isBoostActive ? 'block' : 'none';
+
+        ['red','blue','green','white','black'].forEach(t => {
+            const out = calculateOutcome(t);
+            const scoreEl = document.getElementById(`btn-score-${t}`);
+            const lblEl = document.getElementById(`btn-lbl-${t}`);
+            
+            if (scoreEl && lblEl) {
+                scoreEl.innerText = `+¥${out.score.toLocaleString()}`;
+                lblEl.innerText = `${out.label} | +${out.res}`;
+                const color = (out.label === "Buzz!") ? "#f1c40f" : (out.label === "Promo") ? "#88ccff" : "#fff";
+                scoreEl.style.color = color; lblEl.style.color = color;
+            }
+        });
     }
 
     function calculateOutcome(pType) {
@@ -162,6 +194,15 @@
         
         if (isBoostActive) s *= 2;
         return { score: s, res: r, label: lbl, type: match };
+    }
+
+    function getMatchup(p, e) {
+        if (e === 'white') return (p === 'white') ? 'advantage' : 'extract';
+        if (e === 'black') return (p === 'black') ? 'advantage' : 'extract';
+        if (p === 'white' || p === 'black') return 'extract';
+        if (p === e) return 'advantage';
+        if ((e === 'red' && p === 'blue') || (e === 'blue' && p === 'green') || (e === 'green' && p === 'red')) return 'neutral';
+        return 'extract';
     }
 
     function battle(pType) {
@@ -192,79 +233,47 @@
         const final = Math.floor(score * totalM);
 
         const grid = document.getElementById('ui-res-grid');
-        grid.innerHTML = `
-            <div class="res-item"><span style="color:#aaa">Base Revenue</span><span style="color:#fff">¥ ${score.toLocaleString()}</span></div>
-            <div class="res-divider"></div>
-            <div class="res-item"><span>Passion (🔥)</span><span>${Math.floor(resources.red)} (+${(pR*100).toFixed(0)}%)</span></div>
-            <div class="res-item"><span>Cool    (❄️)</span><span>${Math.floor(resources.blue)} (+${(pB*100).toFixed(0)}%)</span></div>
-            <div class="res-item"><span>Chill   (🍀)</span><span>${Math.floor(resources.green)} (+${(pG*100).toFixed(0)}%)</span></div>
-            <div class="res-divider"></div>
-            <div class="res-item"><span style="color:#aaa">Total Multiplier</span><span style="color:#ffd700">x ${totalM.toFixed(2)}</span></div>
-            <div class="res-item"><span style="color:#aaa">Bonus Amount</span><span style="color:#ffd700">+ ¥ ${(final - score).toLocaleString()}</span></div>
-        `;
+        if (grid) {
+            grid.innerHTML = `
+                <div class="res-item"><span style="color:#aaa">Base Revenue</span><span style="color:#fff">¥ ${score.toLocaleString()}</span></div>
+                <div class="res-divider"></div>
+                <div class="res-item"><span>Passion (🔥)</span><span>${Math.floor(resources.red)} (+${(pR*100).toFixed(0)}%)</span></div>
+                <div class="res-item"><span>Cool    (❄️)</span><span>${Math.floor(resources.blue)} (+${(pB*100).toFixed(0)}%)</span></div>
+                <div class="res-item"><span>Chill   (🍀)</span><span>${Math.floor(resources.green)} (+${(pG*100).toFixed(0)}%)</span></div>
+                <div class="res-divider"></div>
+                <div class="res-item"><span style="color:#aaa">Total Multiplier</span><span style="color:#ffd700">x ${totalM.toFixed(2)}</span></div>
+                <div class="res-item"><span style="color:#aaa">Bonus Amount</span><span style="color:#ffd700">+ ¥ ${(final - score).toLocaleString()}</span></div>
+            `;
+        }
 
-        document.getElementById('ui-res-final').innerText = final.toLocaleString();
-        document.getElementById('result-overlay').style.display = 'flex';
+        const finalEl = document.getElementById('ui-res-final');
+        if (finalEl) finalEl.innerText = final.toLocaleString();
+        
+        const overlay = document.getElementById('result-overlay');
+        if (overlay) overlay.style.display = 'flex';
+        
         const hs = localStorage.getItem('cm_highscore_v1') || 0;
         if (final > hs) {
             localStorage.setItem('cm_highscore_v1', final);
-            document.getElementById('new-record-msg').style.display = 'block';
+            const msg = document.getElementById('new-record-msg');
+            if (msg) msg.style.display = 'block';
         }
-    }
-
-    function updateUI() {
-        // 基本情報
-        document.getElementById('ui-turn').innerText = turn;
-        document.getElementById('ui-score').innerText = score.toLocaleString();
-        document.getElementById('ui-combo').innerText = combo;
-        document.getElementById('ui-level').innerText = level;
-        
-        // 資材
-        document.getElementById('ui-res-red').innerText = Math.floor(resources.red);
-        document.getElementById('ui-res-blue').innerText = Math.floor(resources.blue);
-        document.getElementById('ui-res-green').innerText = Math.floor(resources.green);
-        document.getElementById('ui-rate-red').innerText = `+${((resources.red/30)*100).toFixed(0)}%`;
-        document.getElementById('rate-blue').innerText = `+${((resources.blue/30)*100).toFixed(0)}%`;
-        document.getElementById('rate-green').innerText = `+${((resources.green/30)*100).toFixed(0)}%`;
-        
-        // アイテム
-        document.getElementById('ui-boost-count').innerText = boostCount;
-        document.getElementById('ui-time-count').innerText = recoverCount;
-        document.getElementById('boost-fx').style.display = isBoostActive ? 'block' : 'none';
-
-        // 敵情報
-        if (currentEnemy) {
-            document.getElementById('ui-enemy-icon').innerText = currentEnemy.icon;
-            document.getElementById('ui-enemy-name').innerText = currentEnemy.name;
-            document.getElementById('ui-comment').innerText = currentEnemy.comment;
-            document.getElementById('enemy-box').style.borderColor = currentEnemy.color;
-        }
-
-        // ボタンのラベルと予測
-        ['red','blue','green','white','black'].forEach(t => {
-            const out = calculateOutcome(t);
-            const scoreEl = document.getElementById(`btn-score-${t}`);
-            const lblEl = document.getElementById(`btn-lbl-${t}`);
-            
-            scoreEl.innerText = `+¥${out.score.toLocaleString()}`;
-            lblEl.innerText = `${out.label} | +${out.res}`;
-
-            const color = (out.label === "Buzz!") ? "#f1c40f" : (out.label === "Promo") ? "#88ccff" : "#fff";
-            scoreEl.style.color = color; lblEl.style.color = color;
-        });
     }
 
     function useBooster() { if(boostCount>0 && !isBoostActive) { boostCount--; isBoostActive=true; Vibrate.long(); updateUI(); } }
     function useRecover() { if(recoverCount>0) { recoverCount--; turn++; Vibrate.long(); updateUI(); } }
     function backToTitle() { location.reload(); }
     function shareOnX() {
-        const f = document.getElementById('ui-res-final').innerText;
-        window.open(`https://twitter.com/intent/tweet?text=Earned ¥${f} in CHANNEL MASTER!&url=${encodeURIComponent(window.location.href)}`, '_blank');
+        const final = document.getElementById('ui-res-final').innerText;
+        window.open(`https://twitter.com/intent/tweet?text=Earned ¥${final} in CHANNEL MASTER!&url=${encodeURIComponent(window.location.href)}`, '_blank');
     }
 
+    // 読み込み完了後に一度強制実行
     window.onload = () => {
         const hs = localStorage.getItem('cm_highscore_v1') || 0;
-        document.getElementById('title-hs').innerText = parseInt(hs).toLocaleString();
+        const hsEl = document.getElementById('title-hs');
+        if (hsEl) hsEl.innerText = parseInt(hs).toLocaleString();
+        updateUI(); 
     };
 </script>
 </body>
