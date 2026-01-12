@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CHANNEL MASTER | Final Release</title>
+    <title>CHANNEL MASTER | Final Release Ver.93</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -220,12 +220,14 @@
 
     // Game Data
     const ENEMY_DATA = [{ id:'red', icon:'🔥', color:'#ff6b6b', ja:{name:'パッション勢', comment:'熱い展開頼む！'}, en:{name:'Passion Fan', comment:'Make it hot!'}}, { id:'blue', icon:'❄️', color:'#4facfe', ja:{name:'クール勢', comment:'冷静な分析助かる。'}, en:{name:'Cool Viewer', comment:'Keep it calm.'}}, { id:'green', icon:'🍀', color:'#43e97b', ja:{name:'チル勢', comment:'まったり雑談。'}, en:{name:'Chill Fan', comment:'Relaxing vibes.'}}, { id:'white', icon:'🤝', color:'#ffffff', ja:{name:'VIPゲスト', comment:'コラボ待ってます！'}, en:{name:'VIP Guest', comment:'Collab please!'}}, { id:'black', icon:'👾', color:'#a0a0a0', ja:{name:'マニア', comment:'刺激が欲しい。'}, en:{name:'Maniac', comment:'Surprise me!'}}];
+    
+    // UI STRINGS (Monetization Compliant)
     const UI_STRINGS = {
         ja: {
             manual: "遊び方", start: "配信開始", best: "自己ベスト", turn: "枠 残り", score: "推定収益", total: "TOTAL倍率", boost: "🎬 拡散ブースト", time: "⏰ 延長枠申請", share: "結果をシェア", title: "タイトルへ", result: "配信リザルト",
             red: "🔥 パッション", blue: "❄️ クール", green: "🍀 チル", collab: "🤝 コラボ", prank: "👻 ドッキリ", policy: "プライバシーポリシー",
             resBase: "スパチャ総額", resBonus: "案件ボーナス", resFinal: "最終収益",
-            pContent: "当ゲームでは、ランキング機能のためにスコアとプレイヤー名を保存します。これらのデータは公開されます。",
+            pContent: "<p><b>1. 情報の取得と利用</b><br>当アプリでは、ランキング機能の提供において、プレイヤー名とスコア情報をFirebaseサーバーに送信・保存し、これを全ユーザーに公開します。</p><p><b>2. 広告配信について</b><br>当アプリはGoogle AdSense等の第三者配信広告サービスを利用しています。広告配信事業者は、ユーザーの興味に応じた広告を表示するためにCookieを使用することがあります。Cookieを無効にする設定についてはGoogleのポリシーをご確認ください。</p><p><b>3. アクセス解析</b><br>当アプリでは、Google Analyticsを利用して利用状況を収集しています。このデータは匿名で収集されており、個人を特定するものではありません。</p><p><b>4. 免責事項</b><br>ゲーム内に表示される「収益」や「金額」はゲーム演出上のフィクションです。実際の金銭の授受は発生しません。</p>",
             t0: "基本", t1: "戦略", t2: "特殊",
             m0: "<p><b>配信の仕組み</b></p><p>[スパチャ総額] × [案件倍率] ＝ 最終収益</p><p>案件(Promo)30獲得ごとに最終収益が+1.0倍されます。</p>",
             m1: "<p><b>アクション比較</b></p><table class='manual-table'><tr><th>行動</th><th>案件数</th><th>コンボ</th><th>ドロップ</th></tr><tr><td>Buzz</td><td>+3</td><td>継続</td><td>⏰高 / 🎬低</td></tr><tr><td>Keep</td><td>+6</td><td>継続</td><td>中</td></tr><tr><td>Promo</td><td>+9</td><td>リセット</td><td>⏰低 / 🎬高</td></tr></table>",
@@ -235,7 +237,7 @@
             manual: "HOW TO PLAY", start: "START STREAM", best: "PERSONAL BEST", turn: "Turns Left", score: "EST. REVENUE", total: "TOTAL Multiplier", boost: "🎬 BOOST", time: "⏰ TIME", share: "Share Result", title: "Title Screen", result: "Stream Result",
             red: "🔥 Passion", blue: "❄️ Cool", green: "🍀 Chill", collab: "🤝 Collab", prank: "👻 Prank", policy: "Privacy Policy",
             resBase: "SuperChat Total", resBonus: "Promo Bonus", resFinal: "Final Revenue",
-            pContent: "This game stores scores and names for the global ranking feature. This data is public.",
+            pContent: "<p><b>1. Data Collection</b><br>This app stores player names and scores on Firebase servers for the global ranking feature. This data is publicly visible.</p><p><b>2. Advertising</b><br>This app uses third-party advertising services like Google AdSense. Vendors use cookies to serve ads based on your prior visits to this website. You can opt out of personalized advertising by visiting Google's Ad Settings.</p><p><b>3. Analytics</b><br>We use Google Analytics to collect anonymous usage data to improve the app.</p><p><b>4. Disclaimer</b><br>Any 'Revenue' or currency displayed in this game is fictional and for entertainment purposes only.</p>",
             t0: "Basic", t1: "Strategy", t2: "Special",
             m0: "<p><b>How it works</b></p><p>[SuperChat] × [Promo Multiplier] = Revenue</p><p>Every 30 Promo units increase multiplier by +1.0x.</p>",
             m1: "<p><b>Action Chart</b></p><table class='manual-table'><tr><th>Action</th><th>Promo</th><th>Chain</th><th>Drop</th></tr><tr><td>Buzz</td><td>+3</td><td>Keep</td><td>⏰High</td></tr><tr><td>Keep</td><td>+6</td><td>Keep</td><td>Mid</td></tr><tr><td>Promo</td><td>+9</td><td>Reset</td><td>🎬High</td></tr></table>",
