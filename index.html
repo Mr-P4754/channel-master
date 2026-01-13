@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="配信者になって視聴者の熱量をコントロールし、収益100万円を目指すシミュレーションゲーム『CHANNEL MASTER』。世界ランキング搭載。ブラウザで今すぐプレイ！">
+    <meta name="description" content="配信者になって視聴者の熱量をコントロールし、収益100万円を目指すシミュレーションゲーム『CHANNEL MASTER』。称号機能＆世界ランキング搭載。ブラウザで今すぐプレイ！">
     <title>CHANNEL MASTER | 配信者育成シミュレーション</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -81,6 +81,14 @@
         .rank-score { color: #ffd700; font-weight: bold; }
         .name-input { width: 80%; padding: 10px; font-size: 1.2em; text-align: center; background: #333; color: #fff; border: 2px solid #ffd700; border-radius: 8px; margin-bottom: 10px; }
         .err-msg { color: #ff6b6b; font-size: 0.8em; margin-bottom: 10px; display: none; }
+        
+        /* Titles CSS */
+        .title-row { display:flex; align-items:center; margin-bottom:10px; background:#333; padding:10px; border-radius:8px; border:1px solid #444; text-align:left; opacity:0.6; filter:grayscale(100%); transition: all 0.3s; }
+        .title-row.unlocked { opacity:1; filter:grayscale(0%); border-color:#ffd700; background:linear-gradient(90deg, #333, #443300); }
+        .title-icon { font-size:1.8em; margin-right:10px; width:40px; text-align:center; }
+        .title-info { flex:1; }
+        .title-name { font-weight:bold; color:#ffd700; font-size:0.95em; }
+        .title-desc { font-size:0.75em; color:#ccc; }
 
         /* FX */
         .flash-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 80; opacity: 0; }
@@ -100,6 +108,16 @@
 
 <div id="flash-fx" class="flash-overlay"></div>
 <div id="boost-fx" class="boost-overlay"></div>
+
+<div id="title-overlay" class="overlay" style="display:none; z-index:2700;">
+    <div class="res-box">
+        <h2 style="color:#ffd700; margin-top:0;">👑 COLLECTION</h2>
+        <div style="font-size:0.8em; margin-bottom:10px;">獲得した称号: <span id="title-count-lbl">0</span>/5</div>
+        <div id="title-list-container" style="max-height:300px; overflow-y:auto;">
+            </div>
+        <button class="main-btn" onclick="document.getElementById('title-overlay').style.display='none'">CLOSE</button>
+    </div>
+</div>
 
 <div id="ranking-overlay" class="overlay" style="display:none; z-index:2500;">
     <div class="res-box">
@@ -150,7 +168,10 @@
             <button class="lang-btn" id="lang-ja" onclick="setLang('ja')">🇯🇵 日本語</button>
             <button class="lang-btn" id="lang-en" onclick="setLang('en')">🇺🇸 English</button>
         </div>
-        <button class="sub-btn" onclick="openRanking()">🏆 RANKING</button>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; width:100%;">
+            <button class="sub-btn" onclick="openRanking()">🏆 RANKING</button>
+            <button class="sub-btn" onclick="openTitles()">👑 称号</button>
+        </div>
         <button class="sub-btn" onclick="openManual()" id="btn-manual-lbl">遊び方</button>
         <div style="background:#000; padding:10px; border-radius:8px; margin:5px 0; border:1px solid #333;">
             <div style="font-size:0.8em; color:#888;" id="best-lbl">PERSONAL BEST</div>
@@ -202,6 +223,7 @@
         <hr>
         <div id="res-final-lbl" style="font-size:0.8em; color:#888;">最終収益</div>
         <div style="font-size:2em; font-weight:900; color:#ffd700;">¥ <span id="ui-res-final">0</span></div>
+        <div id="res-new-title" style="display:none; color:#ffd700; font-weight:bold; margin:10px 0; border:1px solid #ffd700; padding:5px;">👑 新しい称号を獲得しました！</div>
         <button class="main-btn" onclick="shareOnX()" id="share-btn">結果をシェア</button>
         <button class="sub-btn" onclick="backToTitle()" id="back-btn">タイトルへ</button>
     </div>
@@ -211,8 +233,8 @@
     <h1>CHANNEL MASTER とは？</h1>
     <p>「CHANNEL MASTER」は、新人配信者となって視聴者の熱量をコントロールし、伝説の配信者を目指す**配信者育成シミュレーションゲーム**です。プレイヤーは限られた「配信枠（ターン数）」の中で、流れてくるコメントや視聴者の感情に合わせて最適なアクションを選び、推定収益を最大化します。</p>
 
-    <h2>ゲームの目的とストーリー</h2>
-    <p>あなたは今日から配信活動を始めるストリーマー。「推定収益100万円（ミリオン）」の壁を超えることが最初の目標です。しかし、視聴者は気まぐれです。「パッション勢」が盛り上がっている時に冷静な分析をしたり、「チル勢」がまったりしている時に過激なドッキリを仕掛けると、視聴者は離れてしまいます。</p>
+    <h2>ゲームの目的と称号コレクション</h2>
+    <p>あなたは今日から配信活動を始めるストリーマー。「推定収益100万円（ミリオン）」の壁を超えることが最初の目標です。さらに、Ver.98からは**「称号システム」**を搭載。「ミリオン達成」や「特化型配信者」など、プレイスタイルに応じた称号を集めるコレクション要素が追加されました。</p>
     <p>場の空気を読み、適切なタイミングで「Buzz（バズ）」や「Promo（案件）」を仕掛け、世界ランキング1位の座を奪い取ってください。</p>
 
     <h2>攻略ガイド：高得点のコツ</h2>
@@ -222,8 +244,8 @@
         <li>**アイテムの活用**: 「ブースト」は収益が2倍になる強力なアイテムです。コンボが最大になったタイミングで使うのがベストです。</li>
     </ul>
 
-    <h2>アップデート情報 (Ver.97)</h2>
-    <p>バランス調整を行いました。初期アイテム数を削減し、より戦略的なプレイが求められるようになりました。世界中のプレイヤーとスコアを競える「グローバルランキング機能」も搭載しています。</p>
+    <h2>アップデート情報 (Ver.98)</h2>
+    <p>新機能「称号システム」を追加しました！特定の条件（100万達成、コンボ30回など）を満たすと、特別な称号を獲得できます。また、世界ランキング機能、プレイバランスの最適化も継続しています。</p>
 
     <h2>プレイ環境</h2>
     <p>本ゲームはPC、スマートフォン、タブレットのブラウザですぐに遊べる**インストール不要の無料Webゲーム**です。</p>
@@ -255,7 +277,16 @@
     // Game Data
     const ENEMY_DATA = [{ id:'red', icon:'🔥', color:'#ff6b6b', ja:{name:'パッション勢', comment:'熱い展開頼む！'}, en:{name:'Passion Fan', comment:'Make it hot!'}}, { id:'blue', icon:'❄️', color:'#4facfe', ja:{name:'クール勢', comment:'冷静な分析助かる。'}, en:{name:'Cool Viewer', comment:'Keep it calm.'}}, { id:'green', icon:'🍀', color:'#43e97b', ja:{name:'チル勢', comment:'まったり雑談。'}, en:{name:'Chill Fan', comment:'Relaxing vibes.'}}, { id:'white', icon:'🤝', color:'#ffffff', ja:{name:'VIPゲスト', comment:'コラボ待ってます！'}, en:{name:'VIP Guest', comment:'Collab please!'}}, { id:'black', icon:'👾', color:'#a0a0a0', ja:{name:'マニア', comment:'刺激が欲しい。'}, en:{name:'Maniac', comment:'Surprise me!'}}];
     
-    // UI STRINGS (Monetization Compliant)
+    // TITLE DATA (New)
+    const TITLE_DATA = [
+        {id:'t1', name:'🔰 期待の新人', desc:'配信を1回完了する'},
+        {id:'t2', name:'💰 ミリオン達成！', desc:'一撃100万円突破'},
+        {id:'t3', name:'🔥 バズ職人', desc:'最大コンボ30達成'},
+        {id:'t4', name:'🎨 特化型配信者', desc:'1属性が70%以上'},
+        {id:'t5', name:'👴 ベテラン配信者', desc:'累計10回プレイ'}
+    ];
+
+    // UI STRINGS
     const UI_STRINGS = {
         ja: {
             manual: "遊び方", start: "配信開始", best: "自己ベスト", turn: "枠 残り", score: "推定収益", total: "TOTAL倍率", boost: "🎬 拡散ブースト", time: "⏰ 延長枠申請", share: "結果をシェア", title: "タイトルへ", result: "配信リザルト",
@@ -282,6 +313,10 @@
     let curLang = localStorage.getItem('cm_lang') || 'ja';
     let turn, score, combo, level, resources, boostCount, recoverCount, isBoostActive, currentEnemy;
     let finalScoreTemp = 0;
+    // New Variables for Titles
+    let maxComboInPlay = 0; 
+    let playCount = parseInt(localStorage.getItem('cm_total_play_v1') || '0');
+
     const Sound = { ctx:null, init() { try { window.AudioContext = window.AudioContext || window.webkitAudioContext; this.ctx = new AudioContext(); } catch(e){} }, play(f, d) { if (!this.ctx) return; const o=this.ctx.createOscillator(), g=this.ctx.createGain(); o.frequency.setValueAtTime(f,this.ctx.currentTime); g.gain.setValueAtTime(0.1,this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001,this.ctx.currentTime+d); o.connect(g); g.connect(this.ctx.destination); o.start(); o.stop(this.ctx.currentTime+d); } };
 
     function setLang(l) { curLang = l; localStorage.setItem('cm_lang', l); applyUI(); }
@@ -305,6 +340,82 @@
     function closeManual() { document.getElementById('manual-overlay').style.display='none'; }
     function showPolicy() { const s = UI_STRINGS[curLang]; document.getElementById('p-title').innerText = s.policy; document.getElementById('p-content').innerHTML = s.pContent; document.getElementById('policy-overlay').style.display = 'flex'; }
     function closePolicy() { document.getElementById('policy-overlay').style.display = 'none'; }
+
+    // --- Title System Functions (NEW) ---
+    function openTitles() {
+        const unlockedStr = localStorage.getItem('cm_titles_v1') || '';
+        const unlocked = unlockedStr.split(',');
+        const container = document.getElementById('title-list-container');
+        let html = '';
+        let count = 0;
+        
+        TITLE_DATA.forEach(t => {
+            const isUnlocked = unlocked.includes(t.id);
+            if(isUnlocked) count++;
+            html += `
+                <div class="title-row ${isUnlocked ? 'unlocked' : ''}">
+                    <div class="title-icon">${isUnlocked ? '🏆' : '🔒'}</div>
+                    <div class="title-info">
+                        <div class="title-name">${isUnlocked ? t.name : '???'}</div>
+                        <div class="title-desc">${t.desc}</div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        document.getElementById('title-count-lbl').innerText = count;
+        container.innerHTML = html;
+        document.getElementById('title-overlay').style.display = 'flex';
+    }
+
+    function checkTitles() {
+        try {
+            // 1. Load current titles
+            let unlockedStr = localStorage.getItem('cm_titles_v1') || '';
+            let unlocked = unlockedStr ? unlockedStr.split(',') : [];
+            let isNew = false;
+            
+            // 2. Increment Play Count
+            playCount++;
+            localStorage.setItem('cm_total_play_v1', playCount);
+
+            // 3. Define Logic
+            // T1: 期待の新人 (First Play) - Always unlock on finish
+            if (!unlocked.includes('t1')) { unlocked.push('t1'); isNew = true; }
+
+            // T2: ミリオン達成 (Score >= 1,000,000)
+            if (!unlocked.includes('t2') && finalScoreTemp >= 1000000) { unlocked.push('t2'); isNew = true; }
+
+            // T3: バズ職人 (MaxCombo >= 30)
+            if (!unlocked.includes('t3') && maxComboInPlay >= 30) { unlocked.push('t3'); isNew = true; }
+
+            // T4: 特化型配信者 (Any Color >= 70% of total)
+            if (!unlocked.includes('t4')) {
+                const r = resources.red, b = resources.blue, g = resources.green;
+                const total = r + b + g;
+                if (total > 0) {
+                    const maxVal = Math.max(r, b, g);
+                    if ( (maxVal / total) >= 0.7 ) { unlocked.push('t4'); isNew = true; }
+                }
+            }
+
+            // T5: ベテラン配信者 (Play Count >= 10)
+            if (!unlocked.includes('t5') && playCount >= 10) { unlocked.push('t5'); isNew = true; }
+
+            // 4. Save
+            if (isNew) {
+                localStorage.setItem('cm_titles_v1', unlocked.join(','));
+                const notif = document.getElementById('res-new-title');
+                notif.style.display = 'block';
+                notif.classList.add('flash-anim');
+            }
+            
+        } catch(e) {
+            console.error("Title Check Error:", e);
+            // Safe exit (Do nothing)
+        }
+    }
+    // ------------------------------------
 
     // --- Ranking Functions ---
     async function openRanking() {
@@ -375,7 +486,7 @@
     }
     // -------------------------
 
-    // Ver.97: Balance Adjustment (Time:0, Boost:1, Combo:0.15)
+    // Ver.97 Balance: Time:0, Boost:1, Combo:0.15
     function startGame() { 
         Sound.init(); 
         document.getElementById('title-screen').style.display='none'; 
@@ -384,9 +495,14 @@
         combo=0; 
         level=1; 
         resources={red:0, blue:0, green:0}; 
-        boostCount=1; // Changed from 3 to 1
-        recoverCount=0; // Changed from 3 to 0
+        boostCount=1; 
+        recoverCount=0; 
         isBoostActive=false; 
+        
+        // New Title Variables
+        maxComboInPlay = 0;
+        document.getElementById('res-new-title').style.display = 'none'; // Hide Notification
+
         spawnEnemy(); 
         updateUI(); 
     }
@@ -396,7 +512,7 @@
         const eType = currentEnemy.id;
         const match = (eType==='white'||eType==='black')?(pType===eType?'adv':'ext'):(pType==='white'||pType==='black')?'ext':(pType===eType?'adv':((eType==='red'&&pType==='blue')||(eType==='blue'&&pType==='green')||(eType==='green'&&pType==='red')?'neu':'ext'));
         
-        // Ver.90 Base
+        // Ver.90 Base Logic
         let s = Math.floor(400 * (1 + level * 0.10)), r = 0;
         
         // Ver.97: Combo Nerf (0.2 -> 0.15)
@@ -406,6 +522,10 @@
         
         if(isBoostActive) s*=2;
         if(match!=='ext') combo++; else combo=0;
+        
+        // Title Logic: Track Max Combo
+        if(combo > maxComboInPlay) maxComboInPlay = combo;
+
         if(pType==='white' || pType==='black'){ const share = r/3; resources.red+=share; resources.blue+=share; resources.green+=share; }
         else { resources[pType]+=r; }
         score+=s; turn--; level++;
@@ -480,6 +600,10 @@
             <div style="text-align:right;color:#ffd700;font-weight:bold">Multiplier: x${totalM.toFixed(2)}</div>
         `;
         document.getElementById('ui-res-final').innerText = finalScoreTemp.toLocaleString();
+        
+        // Check Titles logic HERE
+        checkTitles();
+
         document.getElementById('result-overlay').style.display = 'flex';
         const hs = localStorage.getItem('cm_highscore_v1') || 0;
         if (finalScoreTemp > hs) { localStorage.setItem('cm_highscore_v1', finalScoreTemp); initHighScore(); }
@@ -490,21 +614,4 @@
     function backToTitle() { document.getElementById('result-overlay').style.display = 'none'; document.getElementById('title-screen').style.display = 'flex'; }
     function shareOnX(){ 
         const f = document.getElementById('ui-res-final').innerText;
-        const txt = curLang === 'ja' 
-            ? `【CHANNEL MASTER】今回の配信収益: ¥${f}！ 伝説の配信者を目指せ！ #ChannelMaster #個人開発`
-            : `I earned ¥${f} in CHANNEL MASTER! Can you beat my record? #ChannelMaster #IndieGame`;
-        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(txt)}&url=${encodeURIComponent(window.location.href)}`, '_blank'); 
-    }
-    function initHighScore() { document.getElementById('title-hs').innerText = parseInt(localStorage.getItem('cm_highscore_v1') || 0).toLocaleString(); }
-    
-    window.onload = () => { 
-        initHighScore(); 
-        applyUI(); 
-        // Force Firebase Analytics Init
-        if(typeof firebase !== 'undefined' && typeof firebase.analytics === 'function') {
-            try { firebase.analytics(); } catch(e){ console.log("Analytics init skipped (local or blocked)"); }
-        }
-    };
-</script>
-</body>
-</html>
+        const txt = cur
