@@ -8,6 +8,7 @@
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1661799910335681" crossorigin="anonymous"></script>
 
@@ -221,8 +222,8 @@
         <li>**アイテムの活用**: 「ブースト」は収益が2倍になる強力なアイテムです。コンボが最大になったタイミングで使うのがベストです。</li>
     </ul>
 
-    <h2>アップデート情報 (Ver.96)</h2>
-    <p>世界中のプレイヤーとスコアを競える「グローバルランキング機能」を実装しました。Firebaseによるリアルタイム集計で、あなたの実力が世界に試されます。また、プレイ環境の最適化と、より戦略的なゲームバランスへの調整を行いました。</p>
+    <h2>アップデート情報 (Ver.97)</h2>
+    <p>バランス調整を行いました。初期アイテム数を削減し、より戦略的なプレイが求められるようになりました。世界中のプレイヤーとスコアを競える「グローバルランキング機能」も搭載しています。</p>
 
     <h2>プレイ環境</h2>
     <p>本ゲームはPC、スマートフォン、タブレットのブラウザですぐに遊べる**インストール不要の無料Webゲーム**です。</p>
@@ -374,17 +375,35 @@
     }
     // -------------------------
 
-    function startGame() { Sound.init(); document.getElementById('title-screen').style.display='none'; turn=30; score=0; combo=0; level=1; resources={red:0, blue:0, green:0}; boostCount=3; recoverCount=3; isBoostActive=false; spawnEnemy(); updateUI(); }
+    // Ver.97: Balance Adjustment (Time:0, Boost:1, Combo:0.15)
+    function startGame() { 
+        Sound.init(); 
+        document.getElementById('title-screen').style.display='none'; 
+        turn=30; 
+        score=0; 
+        combo=0; 
+        level=1; 
+        resources={red:0, blue:0, green:0}; 
+        boostCount=1; // Changed from 3 to 1
+        recoverCount=0; // Changed from 3 to 0
+        isBoostActive=false; 
+        spawnEnemy(); 
+        updateUI(); 
+    }
     function spawnEnemy() { currentEnemy = ENEMY_DATA[Math.floor(Math.random() * ENEMY_DATA.length)]; }
 
     function battle(pType) {
         const eType = currentEnemy.id;
         const match = (eType==='white'||eType==='black')?(pType===eType?'adv':'ext'):(pType==='white'||pType==='black')?'ext':(pType===eType?'adv':((eType==='red'&&pType==='blue')||(eType==='blue'&&pType==='green')||(eType==='green'&&pType==='red')?'neu':'ext'));
-        // Ver.90: Base 400
+        
+        // Ver.90 Base
         let s = Math.floor(400 * (1 + level * 0.10)), r = 0;
-        if(match==='adv'){ s=Math.floor(s*(1+combo*0.2)); r=3; } // Buzz +20%
+        
+        // Ver.97: Combo Nerf (0.2 -> 0.15)
+        if(match==='adv'){ s=Math.floor(s*(1+combo*0.15)); r=3; } 
         else if(match==='neu'){ s=Math.floor(s*0.6*(1+combo*0.1)); r=6; }
         else { s=Math.floor(s*0.2); r=9; }
+        
         if(isBoostActive) s*=2;
         if(match!=='ext') combo++; else combo=0;
         if(pType==='white' || pType==='black'){ const share = r/3; resources.red+=share; resources.blue+=share; resources.green+=share; }
@@ -414,7 +433,13 @@
             const m = (eType==='white'||eType==='black')?(type===eType?'adv':'ext'):(type==='white'||type==='black')?'ext':(type===eType?'adv':((eType==='red'&&type==='blue')||(eType==='blue'&&type==='green')||(eType==='green'&&type==='red')?'neu':'ext'));
             let r=9, l=(m==='adv'?"Buzz":m==='neu'?"Keep":"Promo"); 
             if(m==='adv'){r=3} else if(m==='neu'){r=6}
-            let bs = Math.floor(400 * (1 + level * 0.10)); if(m==='adv')bs=Math.floor(bs*(1+combo*0.2)); else if(m==='neu')bs=Math.floor(bs*0.6*(1+combo*0.1)); else bs=Math.floor(bs*0.2);
+            
+            // Ver.97: Display Logic matches Battle Logic
+            let bs = Math.floor(400 * (1 + level * 0.10)); 
+            if(m==='adv')bs=Math.floor(bs*(1+combo*0.15)); 
+            else if(m==='neu')bs=Math.floor(bs*0.6*(1+combo*0.1)); 
+            else bs=Math.floor(bs*0.2);
+            
             if(isBoostActive) bs*=2;
             const isSpecialButton = (type==='white' || type==='black');
             const icon = isSpecialButton ? 'All ' : (type==='red'?'🔥':(type==='blue'?'❄️':'🍀'));
@@ -471,7 +496,15 @@
         window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(txt)}&url=${encodeURIComponent(window.location.href)}`, '_blank'); 
     }
     function initHighScore() { document.getElementById('title-hs').innerText = parseInt(localStorage.getItem('cm_highscore_v1') || 0).toLocaleString(); }
-    window.onload = () => { initHighScore(); applyUI(); };
+    
+    window.onload = () => { 
+        initHighScore(); 
+        applyUI(); 
+        // Force Firebase Analytics Init
+        if(typeof firebase !== 'undefined' && typeof firebase.analytics === 'function') {
+            try { firebase.analytics(); } catch(e){ console.log("Analytics init skipped (local or blocked)"); }
+        }
+    };
 </script>
 </body>
 </html>
